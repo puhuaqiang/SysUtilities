@@ -93,7 +93,11 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\include\AutoLock.h" />
+    <ClInclude Include="..\include\CritSec.h" />
     <ClInclude Include="..\include\Debug.h" />
+    <ClInclude Include="..\include\RWLock.h" />
+    <ClInclude Include="..\include\Sem.h" />
     <ClInclude Include="..\include\SysUtilities.h" />
     <ClInclude Include="..\src\InDef.h" />
     <ClInclude Include="resource.h" />
@@ -101,7 +105,11 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\AutoLock.cpp" />
+    <ClCompile Include="..\src\CritSec.cpp" />
     <ClCompile Include="..\src\Debug.cpp" />
+    <ClCompile Include="..\src\RWLock.cpp" />
+    <ClCompile Include="..\src\Sem.cpp" />
     <ClCompile Include="dllmain.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

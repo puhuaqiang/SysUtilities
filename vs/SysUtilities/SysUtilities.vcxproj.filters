@@ -16,6 +16,9 @@
     <Filter Include="include">
       <UniqueIdentifier>{4a152017-2e00-4f5c-8f02-a54e74434201}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{b24b95ad-2780-4f99-9613-69cc6bf0bbed}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -39,6 +42,18 @@
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\CritSec.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\RWLock.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Sem.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\AutoLock.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -51,7 +66,19 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Debug.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\CritSec.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\RWLock.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Sem.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\AutoLock.cpp">
+      <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -15,10 +15,14 @@
 #include <windows.h>
 
 
-
+#include <functional>
+#include <list>
 // TODO: reference additional headers your program requires here
 #include "../include/SysUtilities.h"
 #include "../include/Debug.h"
 #include "../src/InDef.h"
+#include "../include/api.h"
 
 using namespace SYS_UTL;
+
+#pragma warning(disable: 4251)

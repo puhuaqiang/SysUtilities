@@ -11,19 +11,19 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{3065A845-684A-4D52-BF7D-98659FD6B79E}</ProjectGuid>
+    <ProjectGuid>{29D5A576-4001-483B-B939-72DFDFA9BA53}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>SysUtilities</RootNamespace>
+    <RootNamespace>Demo</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -51,87 +51,49 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;SYS_UTL_EXPORTS;_DEBUG;_WINDOWS;_USRDLL;SYSUTILITIES_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <OutputFile>../bin/$(TargetName)d$(TargetExt)</OutputFile>
-      <ImportLibrary>../bin/$(TargetName)d.lib</ImportLibrary>
+      <OutputFile>../bin/$(TargetName)$(TargetExt)</OutputFile>
     </Link>
-    <PreBuildEvent>
-      <Command>$(ProjectDir)..\git_version_commit.bat</Command>
-    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;SYS_UTL_EXPORTS;NDEBUG;_WINDOWS;_USRDLL;SYSUTILITIES_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <OutputFile>../bin/$(TargetName)$(TargetExt)</OutputFile>
-      <ImportLibrary>../bin/$(TargetName).lib</ImportLibrary>
     </Link>
-    <PreBuildEvent>
-      <Command>$(ProjectDir)..\git_version_commit.bat</Command>
-    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\api.h" />
-    <ClInclude Include="..\include\AutoLock.h" />
-    <ClInclude Include="..\include\CritSec.h" />
-    <ClInclude Include="..\include\Debug.h" />
-    <ClInclude Include="..\include\RWLock.h" />
-    <ClInclude Include="..\include\Sem.h" />
-    <ClInclude Include="..\include\SysUtilities.h" />
-    <ClInclude Include="..\include\ThreadBox.h" />
-    <ClInclude Include="..\include\ThreadPool.h" />
-    <ClInclude Include="..\src\InDef.h" />
-    <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\api.cpp" />
-    <ClCompile Include="..\src\AutoLock.cpp" />
-    <ClCompile Include="..\src\CritSec.cpp" />
-    <ClCompile Include="..\src\Debug.cpp" />
-    <ClCompile Include="..\src\RWLock.cpp" />
-    <ClCompile Include="..\src\Sem.cpp" />
-    <ClCompile Include="..\src\ThreadBox.cpp" />
-    <ClCompile Include="..\src\ThreadPool.cpp" />
-    <ClCompile Include="dllmain.cpp">
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</CompileAsManaged>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
+    <ClCompile Include="Demo.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="SysUtilities.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="SysUtilities.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

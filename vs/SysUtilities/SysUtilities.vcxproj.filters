@@ -54,6 +54,15 @@
     <ClInclude Include="..\include\AutoLock.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\ThreadBox.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ThreadPool.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\api.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -78,6 +87,15 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\src\AutoLock.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ThreadBox.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ThreadPool.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\api.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

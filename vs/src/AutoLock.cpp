@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "../SysUtilities/stdafx.h"
 #include "../include/AutoLock.h"
 
 namespace SYS_UTL

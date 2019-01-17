@@ -13,4 +13,10 @@
 #define SYS_UTL_CPPAPI __declspec(dllimport)	
 #endif
 
+/// Four-byte alignment
+#define PAD_SIZE(s) (((s)+3)&~3)
+
+#include <functional>
+#include <list>
+#pragma warning(disable: 4251)
 #endif

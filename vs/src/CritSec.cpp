@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "../SysUtilities/stdafx.h"
 #include "../include/CritSec.h"
 
 namespace SYS_UTL

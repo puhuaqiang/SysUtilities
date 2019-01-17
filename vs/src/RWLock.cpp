@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "../SysUtilities/stdafx.h"
 #include "../include/RWLock.h"
 #include "../include/AutoLock.h"
 
@@ -64,7 +64,7 @@ namespace SYS_UTL
 		bool lock = true;
 
 		/* Increase the reader count, and lock for write if this is the first reader.
-		* å¢åŠ è¯»å–å™¨æ•°é‡ï¼Œå¦‚æœè¿™æ˜¯ç¬¬ä¸€ä¸ªè¯»å–å™¨ï¼Œåˆ™é”å®šå†™å…¥
+		* Ôö¼Ó¶ÁÈ¡Æ÷ÊıÁ¿£¬Èç¹ûÕâÊÇµÚÒ»¸ö¶ÁÈ¡Æ÷£¬ÔòËø¶¨Ğ´Èë
 		*/
 		if (++m_uiReaders == 1) {
 			if (!m_Sem.Wait())
@@ -93,7 +93,7 @@ namespace SYS_UTL
 		if (m_uiReaders == 0) {
 			/* Currently there are no other readers, which means that the write lock
 			* needs to be acquired.
-			* ç›®å‰æ²¡æœ‰å…¶ä»–è¯»å–å™¨ï¼Œè¿™æ„å‘³ç€éœ€è¦è·å–å†™é”
+			* Ä¿Ç°Ã»ÓĞÆäËû¶ÁÈ¡Æ÷£¬ÕâÒâÎ¶×ÅĞèÒª»ñÈ¡Ğ´Ëø
 			*/
 			if (m_Sem.TryWait(dwTimeOut))
 			{
@@ -104,7 +104,7 @@ namespace SYS_UTL
 		else {
 			/* The write lock has already been acquired because there are other
 			* active readers.
-			* å·²ç»è·å–äº†å†™é”å®šï¼Œå› ä¸ºè¿˜æœ‰å…¶ä»–æ´»åŠ¨è¯»å–å™¨ã€‚
+			* ÒÑ¾­»ñÈ¡ÁËĞ´Ëø¶¨£¬ÒòÎª»¹ÓĞÆäËû»î¶¯¶ÁÈ¡Æ÷¡£
 			*/
 			m_uiReaders++;
 			lock = true;

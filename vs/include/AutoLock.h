@@ -9,15 +9,15 @@ namespace SYS_UTL
 	namespace LOCK_FLAG
 	{
 		// LOCK PROPERTIES
-		struct __adopt_lock_t
+		struct SYS_UTL_CPPAPI __adopt_lock_t
 		{	// indicates adopt lock
 		};
 
-		struct __defer_lock_t
+		struct SYS_UTL_CPPAPI __defer_lock_t
 		{	// indicates defer lock
 		};
 
-		struct __defer_req_lock_t
+		struct SYS_UTL_CPPAPI __defer_req_lock_t
 		{	// indicates defer lock
 		};
 
@@ -25,16 +25,16 @@ namespace SYS_UTL
 		const __defer_lock_t lock_defer;
 		const __defer_req_lock_t lock_defer_req;
 
-		struct __adopt_read_lock_t
+		struct SYS_UTL_CPPAPI __adopt_read_lock_t
 		{
 		};
-		struct __adopt_write_lock_t
+		struct SYS_UTL_CPPAPI __adopt_write_lock_t
 		{
 		};
-		struct __defer_read_lock_t
+		struct SYS_UTL_CPPAPI __defer_read_lock_t
 		{
 		};
-		struct __defer_write_lock_t
+		struct SYS_UTL_CPPAPI __defer_write_lock_t
 		{
 		};
 		const __adopt_read_lock_t lock_read;

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "../SysUtilities/stdafx.h"
 #include "../include/Debug.h"
 
 #include <fstream>

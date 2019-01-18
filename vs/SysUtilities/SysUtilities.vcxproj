@@ -95,8 +95,10 @@
   <ItemGroup>
     <ClInclude Include="..\include\api.h" />
     <ClInclude Include="..\include\AutoLock.h" />
+    <ClInclude Include="..\include\Cond.h" />
     <ClInclude Include="..\include\CritSec.h" />
     <ClInclude Include="..\include\Debug.h" />
+    <ClInclude Include="..\include\Header.h" />
     <ClInclude Include="..\include\RWLock.h" />
     <ClInclude Include="..\include\Sem.h" />
     <ClInclude Include="..\include\SysUtilities.h" />
@@ -110,8 +112,10 @@
   <ItemGroup>
     <ClCompile Include="..\src\api.cpp" />
     <ClCompile Include="..\src\AutoLock.cpp" />
+    <ClCompile Include="..\src\Cond.cpp" />
     <ClCompile Include="..\src\CritSec.cpp" />
     <ClCompile Include="..\src\Debug.cpp" />
+    <ClCompile Include="..\src\InDef.cpp" />
     <ClCompile Include="..\src\RWLock.cpp" />
     <ClCompile Include="..\src\Sem.cpp" />
     <ClCompile Include="..\src\ThreadBox.cpp" />

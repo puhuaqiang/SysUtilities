@@ -63,6 +63,12 @@
     <ClInclude Include="..\include\api.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\Cond.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Header.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -96,6 +102,12 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\src\api.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Cond.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\InDef.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

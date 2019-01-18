@@ -80,4 +80,10 @@ namespace SYS_UTL
 	{
 		return m_bUrgentNeed ? true : false;
 	};
+
+	CRITICAL_SECTION& CCritSec::Get()
+	{
+		return m_CritSec;
+	}
+
 }

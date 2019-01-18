@@ -5,6 +5,17 @@
 
 namespace SYS_UTL
 {
+
+	SYS_UTL_CAPI void Once(LPSYSUTL_ONCE guard, void(*callback)(void))
+	{
+		/* Fast case - avoid WaitForSingleObject. */
+		if (guard->ran) {
+			return;
+		}
+
+		__once_inner(guard, callback);
+	}
+
 	int Random(int start, int end)
 	{
 		static std::default_random_engine generator((int)time(0));

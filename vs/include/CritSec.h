@@ -59,6 +59,7 @@ namespace SYS_UTL
 		*/
 		bool IsRequire();
 
+		CRITICAL_SECTION& Get();
 	protected:
 		/**ÁÙ½çÇøÊµÀý*/
 		CRITICAL_SECTION m_CritSec;

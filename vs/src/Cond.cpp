@@ -340,7 +340,7 @@ namespace SYS_UTL
 			else{
 				err = __cond_fallback_timedwait(&m_Cond, m_Mutex.Get(), dwTimeOut);
 			}
-			if (abs((int)(GetTickCount()-dwStart)) >= dwTimeOut)
+			if (abs((int)(GetTickCount()-dwStart)) >= (int)dwTimeOut)
 			{
 				break;
 			}

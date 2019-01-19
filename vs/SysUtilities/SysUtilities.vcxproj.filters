@@ -72,6 +72,15 @@
     <ClInclude Include="..\include\ReplyLock.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\Event.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ShareMemory.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Mutex.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -114,6 +123,15 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\src\ReplyLock.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Event.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ShareMemory.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Mutex.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

@@ -98,10 +98,13 @@
     <ClInclude Include="..\include\Cond.h" />
     <ClInclude Include="..\include\CritSec.h" />
     <ClInclude Include="..\include\Debug.h" />
+    <ClInclude Include="..\include\Event.h" />
     <ClInclude Include="..\include\Header.h" />
+    <ClInclude Include="..\include\Mutex.h" />
     <ClInclude Include="..\include\ReplyLock.h" />
     <ClInclude Include="..\include\RWLock.h" />
     <ClInclude Include="..\include\Sem.h" />
+    <ClInclude Include="..\include\ShareMemory.h" />
     <ClInclude Include="..\include\SysUtilities.h" />
     <ClInclude Include="..\include\ThreadBox.h" />
     <ClInclude Include="..\include\ThreadPool.h" />
@@ -116,10 +119,13 @@
     <ClCompile Include="..\src\Cond.cpp" />
     <ClCompile Include="..\src\CritSec.cpp" />
     <ClCompile Include="..\src\Debug.cpp" />
+    <ClCompile Include="..\src\Event.cpp" />
     <ClCompile Include="..\src\InDef.cpp" />
+    <ClCompile Include="..\src\Mutex.cpp" />
     <ClCompile Include="..\src\ReplyLock.cpp" />
     <ClCompile Include="..\src\RWLock.cpp" />
     <ClCompile Include="..\src\Sem.cpp" />
+    <ClCompile Include="..\src\ShareMemory.cpp" />
     <ClCompile Include="..\src\ThreadBox.cpp" />
     <ClCompile Include="..\src\ThreadPool.cpp" />
     <ClCompile Include="dllmain.cpp">

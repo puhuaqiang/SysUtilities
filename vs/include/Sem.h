@@ -8,7 +8,6 @@ namespace SYS_UTL
 	/***
 	* \brief 信号量封装类
 	*	1.支持超时返回.
-	*	2.支持非加锁线程通过激活标致,通知已加锁线程释放锁。
 	*/
 	class SYS_UTL_CPPAPI CSem
 	{
@@ -19,6 +18,10 @@ namespace SYS_UTL
 		~CSem();
 		/**
 		* \brief 初始化.
+		* \param uiSem 初始资源数量
+		* \param uiMax 最大并发数量
+		* \param lpName 信号量的名称，传入NULL表示匿名信号量
+		* \param bOpen 是否打开已存在的信号量
 		*/
 		bool Init(unsigned int uiSem, unsigned int uiMax, const char* lpName = NULL, bool bOpen = false);
 		/**

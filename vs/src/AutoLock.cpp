@@ -7,49 +7,41 @@ namespace SYS_UTL
 	{
 		__Initialize();
 		m_lpLock = plock;
-		if (NULL != m_lpLock)
-		{
-			m_lpLock->Lock();
-			m_owns = TRUE;
-		}
+		assert(NULL != plock);
+		m_lpLock->Lock();
+		m_owns = TRUE;
 	}
 	CAutoLock::CAutoLock(SYS_UTL::CCritSec *plock, SYS_UTL::LOCK_FLAG::__adopt_lock_t)
 	{
 		__Initialize();
 		m_lpLock = plock;
-		if (NULL != m_lpLock)
-		{
-			m_lpLock->Lock();
-			m_owns = TRUE;
-		}
+		assert(NULL != plock);
+		m_lpLock->Lock();
+		m_owns = TRUE;
 	};
 	CAutoLock::CAutoLock(SYS_UTL::CCritSec *plock, SYS_UTL::LOCK_FLAG::__defer_lock_t)
 	{
 		__Initialize();
 		m_lpLock = plock;
+		assert(NULL != plock);
 	};
 	CAutoLock::CAutoLock(SYS_UTL::CCritSec *plock, SYS_UTL::LOCK_FLAG::__defer_req_lock_t)
 	{
 		__Initialize();
 		m_lpLock = plock;
+		assert(NULL != plock);
 		m_bRequire = TRUE;
-		if (NULL != m_lpLock)
-		{
-			if (m_lpLock->RequireLock())
-			{//激活成功.
-				m_bRequireSucc = TRUE;
-			}
+		if (m_lpLock->RequireLock())
+		{//激活成功.
+			m_bRequireSucc = TRUE;
 		}
 	};
 	CAutoLock::~CAutoLock()
 	{
 		if (m_owns)
 		{
-			if (NULL != m_lpLock)
-			{
-				m_lpLock->Unlock();
-				m_owns = FALSE;
-			}
+			m_lpLock->Unlock();
+			m_owns = FALSE;
 		}
 
 		if (m_bRequire && m_bRequireSucc)
@@ -57,10 +49,7 @@ namespace SYS_UTL
 			/**
 			* 如果是当前对象激活的强制加锁标识,则需要释放
 			*/
-			if (NULL != m_lpLock)
-			{
-				m_lpLock->ReleaseRequireFlag();
-			}
+			m_lpLock->ReleaseRequireFlag();
 		}
 		m_bRequire = FALSE;
 		m_bRequireSucc = FALSE;
@@ -73,10 +62,9 @@ namespace SYS_UTL
 
 	BOOL CAutoLock::Lock()
 	{
-		if (NULL == m_lpLock)
+		if (Owns())
 		{
-			DBG_ERROR;
-			return FALSE;
+			return TRUE;
 		}
 		if (!__CheckRequireFlag())
 		{
@@ -90,10 +78,9 @@ namespace SYS_UTL
 
 	BOOL CAutoLock::Lock(DWORD dwTimeOut)
 	{
-		if (NULL == m_lpLock)
+		if (Owns())
 		{
-			DBG_ERROR;
-			return FALSE;
+			return TRUE;
 		}
 		if (!__CheckRequireFlag())
 		{
@@ -109,10 +96,6 @@ namespace SYS_UTL
 
 	BOOL CAutoLock::IsOtherRequire() const
 	{
-		if (NULL == m_lpLock)
-		{
-			return FALSE;
-		}
 		return m_lpLock->IsRequire();
 	}
 
@@ -151,34 +134,31 @@ namespace SYS_UTL
 	{
 		m_owns = FALSE;
 		m_lpLock = plock;
-		if (NULL != m_lpLock)
+		assert(NULL != m_lpLock);
+		if (m_lpLock->RLock())
 		{
-			if (m_lpLock->RLock())
-			{
-				m_owns = TRUE;
-			}
-			m_nLockType = RWLOCK_TYPE_READ;
+			m_owns = TRUE;
 		}
+		m_nLockType = RWLOCK_TYPE_READ;
 	}
 
 	CAutoRWLock::CAutoRWLock(SYS_UTL::CRWLock *plock, SYS_UTL::LOCK_FLAG::__adopt_write_lock_t)
 	{
 		m_owns = FALSE;
 		m_lpLock = plock;
-		if (NULL != m_lpLock)
+		assert(NULL != m_lpLock);
+		if (m_lpLock->WLock())
 		{
-			if (m_lpLock->WLock())
-			{
-				m_owns = TRUE;
-			}
-			m_nLockType = RWLOCK_TYPE_WRITE;
+			m_owns = TRUE;
 		}
+		m_nLockType = RWLOCK_TYPE_WRITE;
 	}
 
 	CAutoRWLock::CAutoRWLock(SYS_UTL::CRWLock *plock, SYS_UTL::LOCK_FLAG::__defer_read_lock_t)
 	{
 		m_owns = FALSE;
 		m_lpLock = plock;
+		assert(NULL != m_lpLock);
 		m_nLockType = RWLOCK_TYPE_READ;
 	}
 
@@ -186,6 +166,7 @@ namespace SYS_UTL
 	{
 		m_owns = FALSE;
 		m_lpLock = plock;
+		assert(NULL != m_lpLock);
 		m_nLockType = RWLOCK_TYPE_WRITE;
 	}
 
@@ -215,11 +196,6 @@ namespace SYS_UTL
 		{
 			return TRUE;
 		}
-		if (NULL == m_lpLock)
-		{
-			DBG_ERROR;
-			return FALSE;
-		}
 		if (RWLOCK_TYPE_READ == m_nLockType)
 		{
 			if (m_lpLock->RLock())
@@ -247,11 +223,6 @@ namespace SYS_UTL
 		{
 			return TRUE;
 		}
-		if (NULL == m_lpLock)
-		{
-			DBG_ERROR;
-			return FALSE;
-		}
 		if (RWLOCK_TYPE_READ == m_nLockType)
 		{
 			if (m_lpLock->TryRLock(dwTimeOut))
@@ -272,4 +243,74 @@ namespace SYS_UTL
 		}
 		return Owns();
 	}
+
+	CAutoRepLock::CAutoRepLock(SYS_UTL::CReplyLock *plock, SYS_UTL::LOCK_FLAG::__adopt_lock_t)
+	{
+		m_owns = FALSE;
+		m_lpLock = plock;
+		assert(NULL != m_lpLock);
+		m_lpLock->Lock();
+		m_owns = TRUE;
+	}
+
+	CAutoRepLock::CAutoRepLock(SYS_UTL::CReplyLock *plock, SYS_UTL::LOCK_FLAG::__defer_lock_t)
+	{
+		m_owns = FALSE;
+		m_lpLock = plock;
+		assert(NULL != m_lpLock);
+	}
+
+	CAutoRepLock::~CAutoRepLock()
+	{
+		if (Owns())
+		{
+			m_lpLock->UnLock();
+		}
+	}
+
+	BOOL CAutoRepLock::Owns() const
+	{
+		return m_owns;
+	}
+
+	BOOL CAutoRepLock::Lock()
+	{
+		if (Owns())
+		{
+			return TRUE;
+		}
+		m_owns = m_lpLock->Lock() ? TRUE : FALSE;
+		return Owns();
+	}
+
+	BOOL CAutoRepLock::Lock(DWORD dwTimeOut)
+	{
+		if (Owns())
+		{
+			return TRUE;
+		}
+		m_owns = m_lpLock->TryLock(dwTimeOut) ? TRUE : FALSE;
+		return Owns();
+	}
+
+	BOOL CAutoRepLock::Wait()
+	{
+		if (!Owns())
+		{
+			DBG_ERROR;
+			return FALSE;
+		}
+		return m_lpLock->Wait() ? TRUE : FALSE;
+	}
+
+	BOOL CAutoRepLock::TryWait(DWORD dwTimeOut /*= 100*/)
+	{
+		if (!Owns())
+		{
+			DBG_ERROR;
+			return FALSE;
+		}
+		return m_lpLock->TryWait(dwTimeOut) ? TRUE : FALSE;
+	}
+
 }

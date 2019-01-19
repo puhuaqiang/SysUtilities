@@ -3,6 +3,7 @@
 
 #include "CritSec.h"
 #include "RWLock.h"
+#include "ReplyLock.h"
 
 namespace SYS_UTL
 {
@@ -190,6 +191,62 @@ namespace SYS_UTL
 			RWLOCK_TYPE_WRITE = 2,
 		};
 		RWLOCK_TYPE m_nLockType;
+	};
+
+	/**
+	* \brief 自定加/释放 [锁]
+	*/
+	class SYS_UTL_CPPAPI CAutoRepLock
+	{
+		CAutoRepLock(const CAutoRepLock &refAutoLock);
+		CAutoRepLock &operator=(const CAutoRepLock &refAutoLock);
+
+	public:
+		/**
+		* \brief 读锁
+		*/
+		CAutoRepLock(SYS_UTL::CReplyLock *plock, SYS_UTL::LOCK_FLAG::__adopt_lock_t);
+		/**
+		* \brief 延迟读锁
+		*/
+		CAutoRepLock(SYS_UTL::CReplyLock *plock, SYS_UTL::LOCK_FLAG::__defer_lock_t);
+		~CAutoRepLock();
+
+		/**
+		* \brief 是否加锁成功.
+		* \return 返回TRUE,加锁成功, 否则加锁失败.
+		*/
+		BOOL Owns() const;
+
+		/**
+		* \brief 加锁.
+		* \return 返回TRUE,加锁成功, 否则加锁失败.
+		*/
+		BOOL Lock();
+
+		/**
+		* \brief 加锁.
+		* \param dwTimeOut 超时返回.
+		* \return 返回TRUE,加锁成功, 否则加锁失败.
+		*/
+		BOOL Lock(DWORD dwTimeOut);
+
+		/**
+		* \brief 等待执行回复
+		*	只有在 Lock 成功后，才能 Wait
+		*/
+		BOOL Wait();
+		/**
+		* \brief 等待执行回复
+		*	只有在 Lock 成功后，才能 TryWait
+		* \param uiTimeOut 超时时间(毫秒)
+		*/
+		BOOL TryWait(DWORD dwTimeOut = 100);
+
+	private:
+		SYS_UTL::CReplyLock* m_lpLock;
+		/**是否拥有锁*/
+		BOOL m_owns;
 	};
 }
 

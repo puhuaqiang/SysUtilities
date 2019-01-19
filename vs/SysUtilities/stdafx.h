@@ -17,6 +17,7 @@
 
 #include <functional>
 #include <list>
+#include <assert.h>
 // TODO: reference additional headers your program requires here
 #include "../include/SysUtilities.h"
 #include "../include/Debug.h"

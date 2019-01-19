@@ -37,8 +37,6 @@ int _tmain(int argc, _TCHAR* argv[])
 		std::cout << "条件变量测试" << std::endl;
 		SYS_UTL::CThreadBox tb[5];
 		CCond cd;
-		cd.Init();
-		std::cout << "条件变量初始化:" << cd.IsInit() << std::endl;
 		for (int i = 0; i < 5; i++)
 		{
 			tb[i].Start([&](BOOL& bRun, HANDLE hWait, void* context){
@@ -70,8 +68,6 @@ int _tmain(int argc, _TCHAR* argv[])
 		std::cout << "条件变量测试" << std::endl;
 		SYS_UTL::CThreadBox tb1, tb2;
 		CCond cd;
-		cd.Init();
-		std::cout << "条件变量初始化:" << cd.IsInit()<< std::endl;
 		tb1.Start([&](BOOL& bRun, HANDLE hWait, void* context){
 			Sleep(5000);
 			std::cout << "触发条件变量..." << std::endl;

@@ -17,14 +17,6 @@ namespace SYS_UTL
 	public:
 		CCond();
 		~CCond();
-		/**
-		* \brief 初始化
-		*/
-		int Init();
-		/**
-		* \brief 释放资源
-		*/
-		void UnInit();
 
 		/**
 		* 触发条件变量,唤醒一个等待中的线程
@@ -46,10 +38,6 @@ namespace SYS_UTL
 		* /param dwTimeOut 超时时间(毫秒)
 		*/
 		bool TryWait(DWORD dwTimeOut);
-		/**
-		* \brief 是否初始化成功
-		*/
-		BOOL IsInit() const;
 
 		typedef union _COND_PROPERTY
 		{
@@ -61,12 +49,26 @@ namespace SYS_UTL
 				HANDLE broadcast_event;
 			} fallback;
 		}COND_PROPERTY, *LPLCOND_PROPERTY;
-
+	private:
+		/**
+		* \brief 初始化
+		*/
+		int __Init();
+		/**
+		* \brief 释放资源
+		*/
+		void __UnInit();
+		/**
+		* \brief 是否初始化成功
+		*/
+		BOOL __IsInit() const;
 	private:
 		/// 是否初始化成功
 		BOOL m_bInit;
 		SYS_UTL::CCritSec m_Mutex;
 		COND_PROPERTY m_Cond;
+		/**< 标识.*/
+		int m_iHas;
 	};
 
 }

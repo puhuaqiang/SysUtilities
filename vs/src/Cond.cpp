@@ -214,16 +214,18 @@ namespace SYS_UTL
 	CCond::CCond()
 	{
 		m_bInit = FALSE;
+		m_iHas = 0;
+		__Init();
 	}
 
 	CCond::~CCond()
 	{
-		UnInit();
+		__UnInit();
 	}
 
-	int CCond::Init()
+	int CCond::__Init()
 	{
-		if (IsInit())
+		if (__IsInit())
 		{
 			return 0;
 		}
@@ -231,6 +233,7 @@ namespace SYS_UTL
 		int err = 0;
 		if (HAVE_CONDVAR_API())
 		{
+			DBG_INFO("HAVE_CONDVAR_API:%d", HAVE_CONDVAR_API());
 			err = __cond_condvar_init(m_Cond.cond_var);
 		}else
 		{
@@ -240,12 +243,16 @@ namespace SYS_UTL
 		{
 			m_bInit = TRUE;
 		}
+		else{
+			DBG_ERROR;
+			abort();
+		}
 		return err;
 	}
 
-	void CCond::UnInit()
+	void CCond::__UnInit()
 	{
-		if (!IsInit())
+		if (!__IsInit())
 		{
 			return;
 		}
@@ -260,11 +267,13 @@ namespace SYS_UTL
 
 	int CCond::Signal()
 	{
-		if (!IsInit())
+		if (!__IsInit())
 		{
+			DBG_ERROR;
 			return -1;
 		}
 		CAutoLock lck(&m_Mutex);
+		m_iHas = 1;
 		if (HAVE_CONDVAR_API())
 			__cond_condvar_signal(m_Cond.cond_var);
 		else
@@ -274,11 +283,13 @@ namespace SYS_UTL
 
 	int CCond::Broadcast()
 	{
-		if (!IsInit())
+		if (!__IsInit())
 		{
+			DBG_ERROR;
 			return -1;
 		}
 		CAutoLock lck(&m_Mutex);
+		m_iHas = 1;
 		if (HAVE_CONDVAR_API())
 			__cond_condvar_broadcast(m_Cond.cond_var);
 		else
@@ -289,17 +300,23 @@ namespace SYS_UTL
 
 	bool CCond::Wait()
 	{
-		if (!IsInit())
+		if (!__IsInit())
 		{
+			DBG_ERROR;
 			return false;
 		}
 		CAutoLock lck(&m_Mutex);
-		if (HAVE_CONDVAR_API())
-		{
-			__cond_condvar_wait(m_Cond.cond_var, m_Mutex.Get());
-		}else
-		{
-			__cond_fallback_wait(&m_Cond, m_Mutex.Get());
+		m_iHas = 0;
+		while (m_iHas <= 0)
+		{//´æÔÚÐé¼Ù¼¤»î
+			if (HAVE_CONDVAR_API())
+			{
+				__cond_condvar_wait(m_Cond.cond_var, m_Mutex.Get());
+			}
+			else
+			{
+				__cond_fallback_wait(&m_Cond, m_Mutex.Get());
+			}
 		}
 		return true;
 	}
@@ -312,17 +329,27 @@ namespace SYS_UTL
 		{
 			return false;
 		}
-		if (HAVE_CONDVAR_API())
+		DWORD dwStart = GetTickCount();
+		m_iHas = 0;
+		while (m_iHas <= 0)
 		{
-			err = __cond_condvar_timedwait(m_Cond.cond_var, m_Mutex.Get(), dwTimeOut);
+			if (HAVE_CONDVAR_API())
+			{
+				err = __cond_condvar_timedwait(m_Cond.cond_var, m_Mutex.Get(), dwTimeOut);
+			}
+			else{
+				err = __cond_fallback_timedwait(&m_Cond, m_Mutex.Get(), dwTimeOut);
+			}
+			if (abs((int)(GetTickCount()-dwStart)) >= dwTimeOut)
+			{
+				break;
+			}
 		}
-		else{
-			err = __cond_fallback_timedwait(&m_Cond, m_Mutex.Get(), dwTimeOut);
-		}
-		return 0 == err;
+
+		return (0 == err) && (m_iHas > 0);
 	}
 
-	BOOL CCond::IsInit() const
+	BOOL CCond::__IsInit() const
 	{
 		return m_bInit;
 	}

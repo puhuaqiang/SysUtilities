@@ -81,6 +81,12 @@
     <ClInclude Include="..\include\Mutex.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\NonCopyAble.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\CopyAble.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

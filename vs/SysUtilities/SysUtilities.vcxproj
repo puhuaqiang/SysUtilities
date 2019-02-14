@@ -96,11 +96,13 @@
     <ClInclude Include="..\include\api.h" />
     <ClInclude Include="..\include\AutoLock.h" />
     <ClInclude Include="..\include\Cond.h" />
+    <ClInclude Include="..\include\CopyAble.h" />
     <ClInclude Include="..\include\CritSec.h" />
     <ClInclude Include="..\include\Debug.h" />
     <ClInclude Include="..\include\Event.h" />
     <ClInclude Include="..\include\Header.h" />
     <ClInclude Include="..\include\Mutex.h" />
+    <ClInclude Include="..\include\NonCopyAble.h" />
     <ClInclude Include="..\include\ReplyLock.h" />
     <ClInclude Include="..\include\RWLock.h" />
     <ClInclude Include="..\include\Sem.h" />

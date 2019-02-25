@@ -99,7 +99,7 @@ namespace SYS_UTL
 		* \param iThreadCnt 线程池线程个数上限
 		* \param iTaskBufferLen 任务缓冲区总大小(字节),小于等于0x0FFFFFFF
 		* \param iSingleTaskMaxLen 单个任务缓冲区最大长度(字节), 小于等于iTaskBufferLen
-		* \param iMaxIdleTime 线程最大空闲时间(毫秒),达到最大空闲时间,线程会退出.
+		* \param iMaxIdleTime 线程最大空闲时间(毫秒),达到最大空闲时间,线程会退出. =0生命周期内都存在
 		*/
 		int Init(int iThreadCnt, int iTaskBufferLen, int iSingleTaskMaxLen, int iMaxIdleTime);
 		/**

@@ -8,6 +8,8 @@
 #include <SysUtilities/include/api.h>
 #include <SysUtilities/include/ThreadPool.h>
 #include <SysUtilities/include/Cond.h>
+#include <SysUtilities/include/Timestamp.h>
+#include <SysUtilities/include/TimerQueue.h>
 #ifdef _DEBUG
 #pragma comment(lib, "SysUtilities/lib/SysUtilitiesd.lib")
 #else
@@ -29,6 +31,36 @@ void ThreadPoolProc(void* lpTask, int iTaskDataLen, void* lpUsr)
 
 int _tmain(int argc, _TCHAR* argv[])
 {
+	std::cin.ignore();
+	{
+		CTimestamp tx = CTimestamp::now();
+		std::cout << tx.microSecondsSinceEpoch() << std::endl;
+		std::cout << tx.toString() << std::endl;
+		std::cout << tx.toFormattedString() << std::endl;
+
+		CTimestamp t = CTimestamp::now();
+		CTimerQueue tq;
+		Sleep(2000);
+		CTimerId tid = tq.addTimer([](){
+
+			CTimestamp tmp = CTimestamp::now();
+			std::cout << tmp.toFormattedString() << std::endl;
+		}, t, 2);
+		if (!tid.IsValid())
+		{
+			std::cout << "err" << std::endl;
+		}
+		CTimerId tid2 = tq.addTimer([&](){
+			CTimestamp tmp = CTimestamp::now();
+			std::cout << tmp.toFormattedString() << " xxx " << std::endl;
+			tq.cancel(tid2);
+		}, addTime(t, 3.0), 0);
+		if (!tid2.IsValid())
+		{
+			std::cout << "errxx" << std::endl;
+		}
+		std::cin.ignore();
+	}
 	std::cin.ignore();
 	{
 		/**

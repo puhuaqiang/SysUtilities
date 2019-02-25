@@ -16,7 +16,13 @@
 /// Four-byte alignment
 #define PAD_SIZE(s) (((s)+3)&~3)
 
+#include <atomic>
 #include <functional>
+#include <map>
 #include <list>
+#include <string>
+#include <stdint.h>
+#include <windows.h>
+#include <assert.h>
 #pragma warning(disable: 4251)
 #endif

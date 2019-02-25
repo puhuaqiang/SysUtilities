@@ -110,6 +110,8 @@
     <ClInclude Include="..\include\SysUtilities.h" />
     <ClInclude Include="..\include\ThreadBox.h" />
     <ClInclude Include="..\include\ThreadPool.h" />
+    <ClInclude Include="..\include\TimerQueue.h" />
+    <ClInclude Include="..\include\Timestamp.h" />
     <ClInclude Include="..\src\InDef.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -130,6 +132,8 @@
     <ClCompile Include="..\src\ShareMemory.cpp" />
     <ClCompile Include="..\src\ThreadBox.cpp" />
     <ClCompile Include="..\src\ThreadPool.cpp" />
+    <ClCompile Include="..\src\TimerQueue.cpp" />
+    <ClCompile Include="..\src\Timestamp.cpp" />
     <ClCompile Include="dllmain.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

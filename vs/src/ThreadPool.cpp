@@ -434,7 +434,7 @@ namespace SYS_UTL
 		auto itBeg = m_lstThreads.begin();
 		for (; itBeg != m_lstThreads.end();)
 		{
-			if ((*itBeg)->IsError() || ((*itBeg)->GetIdleTime() >= m_iMaxIdleTime))
+			if ((*itBeg)->IsError() || ((m_iMaxIdleTime > 0) && ((*itBeg)->GetIdleTime() >= m_iMaxIdleTime)))
 			{
 				/*MSG_INFO("空闲超时:%d 线程是否发生错误:%d",
 				(*itBeg)->GetIdleTime() >= m_iMaxIdleTime,

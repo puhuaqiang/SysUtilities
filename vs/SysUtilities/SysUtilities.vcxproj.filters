@@ -87,6 +87,12 @@
     <ClInclude Include="..\include\CopyAble.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\Timestamp.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\TimerQueue.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -138,6 +144,12 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Mutex.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Timestamp.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\TimerQueue.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

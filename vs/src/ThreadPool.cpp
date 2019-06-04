@@ -151,6 +151,11 @@ namespace SYS_UTL
 	bool CThreadWrapper::IsIdle()
 	{
 		CAutoLock lck(&m_lock);
+		if (m_Thread.IsData())
+		{
+			//MSG_ERROR;
+			return false;
+		}
 		return m_uiIdleTimestamp > 0;
 	}
 

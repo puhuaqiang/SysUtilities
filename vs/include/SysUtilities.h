@@ -24,5 +24,7 @@
 #include <stdint.h>
 #include <windows.h>
 #include <assert.h>
+
+#include "StringPiece.h"
 #pragma warning(disable: 4251)
 #endif

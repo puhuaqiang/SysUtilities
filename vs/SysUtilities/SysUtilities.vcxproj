@@ -107,11 +107,13 @@
     <ClInclude Include="..\include\RWLock.h" />
     <ClInclude Include="..\include\Sem.h" />
     <ClInclude Include="..\include\ShareMemory.h" />
+    <ClInclude Include="..\include\StringPiece.h" />
     <ClInclude Include="..\include\SysUtilities.h" />
     <ClInclude Include="..\include\ThreadBox.h" />
     <ClInclude Include="..\include\ThreadPool.h" />
     <ClInclude Include="..\include\TimerQueue.h" />
     <ClInclude Include="..\include\Timestamp.h" />
+    <ClInclude Include="..\include\Types.h" />
     <ClInclude Include="..\src\InDef.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />

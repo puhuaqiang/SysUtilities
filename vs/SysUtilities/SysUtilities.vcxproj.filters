@@ -93,6 +93,12 @@
     <ClInclude Include="..\include\TimerQueue.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\StringPiece.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Types.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

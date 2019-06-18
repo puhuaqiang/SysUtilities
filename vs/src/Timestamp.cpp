@@ -10,6 +10,8 @@
 #include <inttypes.h>
 #include <assert.h>
 
+#include "InDef.h"
+
 namespace SYS_UTL
 {
 	/**
@@ -36,12 +38,11 @@ namespace SYS_UTL
 	{
 		char buf[64] = { 0 };
 		time_t seconds = static_cast<time_t>(microSecondsSinceEpoch_ / kMicroSecondsPerSecond);
-
-#if 0
-		time_t now;
+		
+		DBG_INFO("toFormattedString...%d", seconds);
+#if 1
 		struct tm tm_time;
-		now = time(NULL);
-		gmtime_s(&tm_time, &now); // FIXME: localtime_r ?
+		gmtime_s(&tm_time, &seconds);// FIXME: localtime_r ?
 #else
 		struct tm tm_time;
 		SYSTEMTIME wtm;

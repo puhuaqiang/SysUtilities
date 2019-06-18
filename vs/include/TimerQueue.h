@@ -38,29 +38,34 @@ namespace SYS_UTL
 		int64_t sequence_;
 	};
 
+	/**
+	* 时间队列
+	*/
 	class SYS_UTL_CPPAPI CTimerQueue : CNonCopyAble
 	{
-	private:
-		//typedef std::shared_ptr<std::function<void()>> Functor;
-		HANDLE timerQueue_;
-		std::map<CTimer*, HANDLE> timers_;
-		CTimerId check_;
 	public:
 		CTimerQueue();
 		~CTimerQueue();
 		/**
+		* 添加回调在给定的时间运行
 		* @param when 定时器触发时间
 		* @param interval 间隔时间 >0 周期性计时器. 单位毫秒
 		*/
-		CTimerId addTimer(const TimerCallback& cb, CTimestamp when, double seconds);
+		CTimerId addTimer(const TimerCallback& cb, CTimestamp when, double interval);
 		void cancel(CTimerId timerId);
+	private:
+		//typedef std::shared_ptr<std::function<void()>> Functor;
+		HANDLE timerQueue_;
+		std::map<CTimer*, HANDLE> timers_;
+		/// 定时检测 timers
+		CTimerId check_;
 		SYS_UTL::CCritSec mutex_;
 	};
 
 	/**
-	封装了定时器相关的事件和回调函数
-	Timer封装了定时器的一些参数，例如超时回调函数、超时时间、定时器是否重复、重复间隔时间、定时器的序列号。
-	其函数大都是设置这些参数，run()用来调用回调函数，restart()用来重启定时器（如果设置为重复）
+	* 封装了定时器相关的事件和回调函数
+	* Timer封装了定时器的一些参数，例如超时回调函数、超时时间、定时器是否重复、重复间隔时间、定时器的序列号。
+	* 其函数大都是设置这些参数，run()用来调用回调函数，restart()用来重启定时器（如果设置为重复）
 	*/
 	class SYS_UTL_CPPAPI CTimer : CNonCopyAble
 	{
@@ -77,7 +82,7 @@ namespace SYS_UTL
 		//超时时调用回调函数
 		void run() const
 		{
-			assert(!is_die());
+			//assert(!is_die());
 			callback_();
 		}
 

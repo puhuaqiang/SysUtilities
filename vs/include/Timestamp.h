@@ -13,11 +13,14 @@ namespace SYS_UTL
 	class SYS_UTL_CPPAPI CTimestamp : public SYS_UTL::CCopyAble
 	{
 	public:
+		/// 构造无效的时间戳
 		CTimestamp()
 			: microSecondsSinceEpoch_(0)
 		{
 		}
-
+		///
+		/// Constucts a Timestamp at specific time
+		///
 		explicit CTimestamp(int64_t microSecondsSinceEpochArg)
 			: microSecondsSinceEpoch_(microSecondsSinceEpochArg)
 		{

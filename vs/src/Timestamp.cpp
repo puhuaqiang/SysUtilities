@@ -39,10 +39,10 @@ namespace SYS_UTL
 		char buf[64] = { 0 };
 		time_t seconds = static_cast<time_t>(microSecondsSinceEpoch_ / kMicroSecondsPerSecond);
 		
-		DBG_INFO("toFormattedString...%d", seconds);
 #if 1
 		struct tm tm_time;
-		gmtime_s(&tm_time, &seconds);// FIXME: localtime_r ?
+		//gmtime_s(&tm_time, &seconds);// FIXME: localtime_r ?
+		localtime_s(&tm_time, &seconds);
 #else
 		struct tm tm_time;
 		SYSTEMTIME wtm;

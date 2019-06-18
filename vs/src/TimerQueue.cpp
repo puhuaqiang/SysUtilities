@@ -64,7 +64,7 @@ namespace SYS_UTL
 			(WAITORTIMERCALLBACK)TimerRoutine, timer,
 			once ? static_cast<DWORD>(timeDif * 1000) : 0,
 			once ? 0 : static_cast<DWORD>(seconds * 1000), 0);
-		assert(success);
+		//assert(success);
 		//intptr_t id = reinterpret_cast<intptr_t>(timer);
 		timers_[timer] = htimer;
 		return CTimerId(timer, timer->sequence());

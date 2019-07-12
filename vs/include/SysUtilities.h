@@ -27,4 +27,16 @@
 
 #include "StringPiece.h"
 #pragma warning(disable: 4251)
+
+#include "Debug.h"
+#ifndef DBG_I
+#define DBG_I(...) SYS_UTL::dbgview_info2("SysUtility", __FILE__, __LINE__, __VA_ARGS__);
+#endif
+#ifndef DBG_E
+#define DBG_E DBG_I("ERROR");
+#endif
+#ifndef DBG_F
+#define DBG_F DBG_I("FATAL ERROR");
+#endif
+
 #endif

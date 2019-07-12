@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include <iostream>
+#include <SysUtilities/include/net/net.h>
 #include <windows.h>
 #include <SysUtilities/include/SysUtilities.h>
 #include <SysUtilities/include/api.h>
@@ -10,11 +11,14 @@
 #include <SysUtilities/include/Cond.h>
 #include <SysUtilities/include/Timestamp.h>
 #include <SysUtilities/include/TimerQueue.h>
+
 #ifdef _DEBUG
 #pragma comment(lib, "SysUtilities/lib/SysUtilitiesd.lib")
 #else
 #pragma comment(lib, "SysUtilities/lib/SysUtilities.lib")
 #endif
+
+#include <thread>
 
 using namespace SYS_UTL;
 struct  THREAD_POOL_INFO
@@ -31,6 +35,148 @@ void ThreadPoolProc(void* lpTask, int iTaskDataLen, void* lpUsr)
 
 int _tmain(int argc, _TCHAR* argv[])
 {
+	std::cin.ignore();
+	if(true){// tcp
+		std::cout << "TCP." << std::endl;
+		SYS_UTL::NET::CNetServer cNetServer;
+		int err = cNetServer.OpenSocket(SYS_UTL::NET::TRANS_PROTOCOL_TYPE_TCP, nullptr, 9898);
+		if (err != 0 || cNetServer.IsError() || !cNetServer.IsValidSkt()){
+			std::cout << "OpenSocket err" << std::endl;
+			return -1;
+		}
+		cNetServer.SetSktNoBlock();
+		cNetServer.SetTcpNoDelay();
+		cNetServer.SetSktReuseAddr(true);
+		SYS_UTL::NET::CNetClient* pNetClient = nullptr;
+		std::thread clt([](){
+			Sleep(1000);
+			SYS_UTL::NET::CNetClient clt;
+			std::cout << "开始连接." << std::endl;
+			clt.ConnectSocket(SYS_UTL::NET::TRANS_PROTOCOL_TYPE_TCP, "127.0.0.1", 9898);
+			clt.SetSktNoBlock();
+			if (!clt.IsError() && clt.IsValidSkt()) {
+				std::cout << "链接成功." << std::endl;
+				std::string str;
+				char buff[1024];
+				int len = 0;
+
+				while (true)
+				{
+					str = "";
+					std::cout << "输入:" << std::endl;
+					std::cin >> str;
+
+					if (str.length()) {
+						len = clt.Write((const char*)str.data(), str.length(), 2000);
+						std::cout << "w:" << len << std::endl;
+					}
+
+					len = clt.Read(buff, 1024, 0, 2000);
+					if (len > 0) {
+						buff[len] = '\0';
+						std::cout << "客户端接收到数据:" << buff << std::endl;
+					}
+				}
+			}
+			else {
+				std::cout << "链接失败." << std::endl;
+			}
+		});
+		while (true)
+		{
+			if (cNetServer.Accept(pNetClient)){
+				pNetClient->SetSktNoBlock();
+				new std::thread([](SYS_UTL::NET::CNetClient*& skt){
+					char szData[1024];
+					int len = 0;
+					while (true)
+					{
+						szData[0] = '\0';
+						len = skt->Read(szData, 1024);
+						if (len <= 0) {
+							continue;
+						}
+						szData[len] = '\0';
+						std::cout << szData << std::endl;
+
+						strncat_s(szData, _TRUNCATE, "—SERVER", _TRUNCATE);
+						skt->Write(szData, strlen(szData), 2000);
+					}
+				}, std::ref(pNetClient));
+			}
+			else{
+				Sleep(10);
+			}
+		}
+	}
+
+	std::cin.ignore();
+	{
+		std::cout << "UDP." << std::endl;
+		char buff[1024];
+		sockaddr stUdpSrc;
+		int len = sizeof(sockaddr);
+		SYS_UTL::NET::CNetServer cNetServer;
+		int err = cNetServer.OpenSocket(SYS_UTL::NET::TRANS_PROTOCOL_TYPE_UDP, nullptr, 9898);
+		if (err != 0 || cNetServer.IsError() || !cNetServer.IsValidSkt()){
+			std::cout << "OpenSocket err" << std::endl;
+			return -1;
+		}
+		cNetServer.SetSktNoBlock();
+		cNetServer.SetSktReuseAddr(true);
+		SYS_UTL::NET::CNetClient* pNetClient = nullptr;
+		std::thread clt([](){
+			Sleep(1000);
+			SYS_UTL::NET::CNetClient clt;
+			std::cout << "开始连接." << std::endl;
+			clt.ConnectSocket(SYS_UTL::NET::TRANS_PROTOCOL_TYPE_UDP, "127.0.0.1", 9898);
+			clt.SetSktNoBlock();
+			if (!clt.IsError() && clt.IsValidSkt()) {
+				std::cout << "链接成功." << std::endl;
+				std::string str;
+				char buff[1024];
+				int len = 0, iAddrLen = sizeof(sockaddr);
+				sockaddr stUdpSrc;
+
+				while (true)
+				{
+					str = "";
+					std::cout << "输入:" << std::endl;
+					std::cin >> str;
+
+					if (str.length()) {
+						len = clt.Write((const char*)str.data(), str.length(), 2000);
+						std::cout << "w:" << len << std::endl;
+					}
+
+					len = clt.ReadFromUDP(buff, 1024, (struct sockaddr&)stUdpSrc, iAddrLen, 2000);
+					if (len > 0) {
+						buff[len] = '\0';
+						std::cout << "客户端接收到数据:" << buff << std::endl;
+					}
+				}
+			}
+			else {
+				std::cout << "链接失败." << std::endl;
+			}
+		});
+
+		while (true)
+		{
+			buff[0] = '\0';
+
+			int iDataLen = cNetServer.ReadFromUDP(buff, 1024, (struct sockaddr&)stUdpSrc, len, 2000);
+			if (iDataLen > 0 && iDataLen < 1024) {
+
+				buff[iDataLen] = '\0';
+				strncat_s(buff, sizeof(buff), " Server ok", strlen(" Server ok"));
+				cNetServer.WriteToUDP(buff, strlen(buff), (sockaddr&)stUdpSrc, len);
+			}
+			else{
+				//std::cout << "UDP Server Not Read Data." << std::endl;
+			}
+		}
+	}
 	std::cin.ignore();
 	{
 		CTimestamp tx = CTimestamp::now();

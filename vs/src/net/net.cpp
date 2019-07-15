@@ -4,6 +4,7 @@
 #include <atomic>
 #include <memory>
 #include "../../include/api.h"
+#include "../InDef.h"
 
 
 namespace SYS_UTL{namespace NET{

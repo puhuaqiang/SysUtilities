@@ -1,5 +1,6 @@
 #include "../SysUtilities/stdafx.h"
 #include "../include/sem.h"
+#include "InDef.h"
 
 namespace SYS_UTL
 {
@@ -33,7 +34,7 @@ namespace SYS_UTL
 	{
 		if (!__Valid())
 		{
-			DBG_ERROR;
+			DBG_E;
 			return;
 		}
 		CloseHandle(m_hSem);
@@ -44,7 +45,7 @@ namespace SYS_UTL
 	{
 		if (!__Valid())
 		{
-			DBG_ERROR;
+			DBG_E;
 			return false;
 		}
 		if (WaitForSingleObject(m_hSem, INFINITE) != WAIT_OBJECT_0)
@@ -58,7 +59,7 @@ namespace SYS_UTL
 	{
 		if (!__Valid())
 		{
-			DBG_ERROR;
+			DBG_E;
 			return false;
 		}
 		if (WaitForSingleObject(m_hSem, dwTimeOut) != WAIT_OBJECT_0)
@@ -72,12 +73,12 @@ namespace SYS_UTL
 	{
 		if (!__Valid())
 		{
-			DBG_ERROR;
+			DBG_E;
 			return false;
 		}
 		if (!ReleaseSemaphore(m_hSem, 1, NULL))
 		{
-			DBG_ERROR;
+			DBG_E;
 			return false;
 		}
 		return true;

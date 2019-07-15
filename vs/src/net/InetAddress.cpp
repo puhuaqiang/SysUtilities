@@ -9,7 +9,7 @@
 #include "../../include/net/InetAddress.h"
 #include "Endian.h"
 #include "../../include/net/SocketsOps.h"
-
+#include "../InDef.h"
 // #include <netdb.h>
 // #include <netinet/in.h>
 

@@ -56,7 +56,7 @@ void __once_inner(LPSYSUTL_ONCE guard, void(*callback)(void))
 
 	created_event = CreateEvent(NULL, 1, 0, NULL);
 	if (created_event == 0) {
-		DBG_INFO("errno:%d error:%s",GetLastError(), "CreateEvent");
+		DBG_I("errno:%d error:%s",GetLastError(), "CreateEvent");
 		return;
 	}
 
@@ -93,7 +93,7 @@ void __winapi_init(void)
 
 	kernel32_module = GetModuleHandleA("kernel32.dll");
 	if (kernel32_module == NULL) {
-		DBG_INFO("errno:%d error:%s", GetLastError(), "GetModuleHandleA");
+		DBG_I("errno:%d error:%s", GetLastError(), "GetModuleHandleA");
 		return;
 	}
 

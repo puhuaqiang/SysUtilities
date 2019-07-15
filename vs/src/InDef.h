@@ -1,12 +1,15 @@
 #ifndef __SYS_UTILITIES_INDEF__
 #define __SYS_UTILITIES_INDEF__
 #include "../include/api.h"
-#if 1
-#define DBG_INFO(...) dbgview_info2("SysUtilties",__FILE__,__LINE__,__VA_ARGS__);
-#define DBG_ERROR DBG_INFO("ERROR")
-#else
-#define DBG_INFO(...)
-#define DBG_ERROR
+#include "../include/Debug.h"
+#ifndef DBG_I
+#define DBG_I(...) SYS_UTL::dbgview_info2("SysUtility", __FILE__, __LINE__, __VA_ARGS__);
+#endif
+#ifndef DBG_E
+#define DBG_E DBG_I("ERROR");
+#endif
+#ifndef DBG_F
+#define DBG_F DBG_I("FATAL ERROR");
 #endif
 
 typedef VOID(WINAPI* sInitializeConditionVariable)(PCONDITION_VARIABLE ConditionVariable);

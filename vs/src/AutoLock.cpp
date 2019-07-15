@@ -68,7 +68,7 @@ namespace SYS_UTL
 		}
 		if (!__CheckRequireFlag())
 		{
-			DBG_ERROR;
+			DBG_E;
 			return FALSE;
 		}
 		m_lpLock->Lock();
@@ -84,7 +84,7 @@ namespace SYS_UTL
 		}
 		if (!__CheckRequireFlag())
 		{
-			DBG_ERROR;
+			DBG_E;
 			return FALSE;
 		}
 		if (m_lpLock->LockWait(dwTimeOut))
@@ -124,7 +124,7 @@ namespace SYS_UTL
 		}
 		if (!IsRequireSucc())
 		{//该实例没有请求[强制加锁标识]成功,该标识已经被其他线程请求了
-			DBG_INFO("autolock [IsRequireSucc] fail");
+			DBG_I("autolock [IsRequireSucc] fail");
 			return FALSE;
 		}
 		return TRUE;
@@ -211,7 +211,7 @@ namespace SYS_UTL
 			}
 		}
 		else{
-			DBG_ERROR;
+			DBG_E;
 			return FALSE;
 		}
 		return Owns();
@@ -238,7 +238,7 @@ namespace SYS_UTL
 			}
 		}
 		else{
-			DBG_ERROR;
+			DBG_E;
 			return FALSE;
 		}
 		return Owns();
@@ -297,7 +297,7 @@ namespace SYS_UTL
 	{
 		if (!Owns())
 		{
-			DBG_ERROR;
+			DBG_E;
 			return FALSE;
 		}
 		return m_lpLock->Wait() ? TRUE : FALSE;
@@ -307,7 +307,7 @@ namespace SYS_UTL
 	{
 		if (!Owns())
 		{
-			DBG_ERROR;
+			DBG_E;
 			return FALSE;
 		}
 		return m_lpLock->TryWait(dwTimeOut) ? TRUE : FALSE;

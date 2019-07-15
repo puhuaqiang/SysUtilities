@@ -18,6 +18,7 @@
 //#include <sys/uio.h>  // readv
 //#include <unistd.h>
 #include "../../include/api.h"
+#include "../InDef.h"
 
 using namespace SYS_UTL;
 using namespace SYS_UTL::NET;

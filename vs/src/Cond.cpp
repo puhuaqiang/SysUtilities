@@ -20,7 +20,7 @@ static void __cond_condvar_signal(CONDITION_VARIABLE& cond)
 {
 	if (NULL == pWakeConditionVariable)
 	{
-		DBG_ERROR;
+		DBG_E;
 		return;
 	}
 	pWakeConditionVariable(&cond);
@@ -30,7 +30,7 @@ static void __cond_condvar_broadcast(CONDITION_VARIABLE& cond)
 {
 	if (NULL == pWakeAllConditionVariable)
 	{
-		DBG_ERROR;
+		DBG_E;
 		return;
 	}
 	pWakeAllConditionVariable(&cond);
@@ -51,7 +51,7 @@ static int __cond_condvar_timedwait(CONDITION_VARIABLE& cond,
 	}
 	if (GetLastError() != ERROR_TIMEOUT)
 	{
-		DBG_ERROR;
+		DBG_E;
 		//abort();
 	}
 	return -1;
@@ -107,12 +107,12 @@ static void __cond_fallback_destroy(SYS_UTL::CCond::LPLCOND_PROPERTY cond)
 	if (!CloseHandle(cond->fallback.broadcast_event))
 	{
 		//abort();
-		DBG_ERROR;
+		DBG_E;
 	}
 	if (!CloseHandle(cond->fallback.signal_event))
 	{
 		//abort();
-		DBG_ERROR;
+		DBG_E;
 	}
 	DeleteCriticalSection(&cond->fallback.waiters_count_lock);
 }
@@ -233,7 +233,7 @@ namespace SYS_UTL
 		int err = 0;
 		if (HAVE_CONDVAR_API())
 		{
-			DBG_INFO("HAVE_CONDVAR_API:%d", HAVE_CONDVAR_API());
+			DBG_I("HAVE_CONDVAR_API:%d", HAVE_CONDVAR_API());
 			err = __cond_condvar_init(m_Cond.cond_var);
 		}else
 		{
@@ -244,7 +244,7 @@ namespace SYS_UTL
 			m_bInit = TRUE;
 		}
 		else{
-			DBG_ERROR;
+			DBG_E;
 			abort();
 		}
 		return err;
@@ -269,7 +269,7 @@ namespace SYS_UTL
 	{
 		if (!__IsInit())
 		{
-			DBG_ERROR;
+			DBG_E;
 			return -1;
 		}
 		CAutoLock lck(&m_Mutex);
@@ -285,7 +285,7 @@ namespace SYS_UTL
 	{
 		if (!__IsInit())
 		{
-			DBG_ERROR;
+			DBG_E;
 			return -1;
 		}
 		CAutoLock lck(&m_Mutex);
@@ -302,7 +302,7 @@ namespace SYS_UTL
 	{
 		if (!__IsInit())
 		{
-			DBG_ERROR;
+			DBG_E;
 			return false;
 		}
 		CAutoLock lck(&m_Mutex);

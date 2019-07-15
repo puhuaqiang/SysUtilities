@@ -38,7 +38,7 @@ namespace SYS_UTL
 	{
 		if (!__Valid())
 		{
-			DBG_ERROR;
+			DBG_E;
 			return;
 		}
 		CloseHandle(m_hEvent);
@@ -49,7 +49,7 @@ namespace SYS_UTL
 	{
 		if (!__Valid())
 		{
-			DBG_ERROR;
+			DBG_E;
 			return false;
 		}
 		if (WaitForSingleObject(m_hEvent, INFINITE) != WAIT_OBJECT_0)
@@ -63,7 +63,7 @@ namespace SYS_UTL
 	{
 		if (!__Valid())
 		{
-			DBG_ERROR;
+			DBG_E;
 			return false;
 		}
 		if (WaitForSingleObject(m_hEvent, dwTimeOut) != WAIT_OBJECT_0)
@@ -77,12 +77,12 @@ namespace SYS_UTL
 	{
 		if (!__Valid())
 		{
-			DBG_ERROR;
+			DBG_E;
 			return false;
 		}
 		if (!SetEvent(m_hEvent))
 		{
-			DBG_ERROR;
+			DBG_E;
 			return false;
 		}
 		return true;
@@ -97,12 +97,12 @@ namespace SYS_UTL
 	{
 		if (!__Valid())
 		{
-			DBG_ERROR;
+			DBG_E;
 			return false;
 		}
 		if (!ResetEvent(m_hEvent))
 		{
-			DBG_ERROR;
+			DBG_E;
 			return false;
 		}
 		return true;
@@ -112,12 +112,12 @@ namespace SYS_UTL
 	{
 		if (!__Valid())
 		{
-			DBG_ERROR;
+			DBG_E;
 			return false;
 		}
 		if (!PulseEvent(m_hEvent))
 		{
-			DBG_ERROR;
+			DBG_E;
 			return false;
 		}
 		return true;

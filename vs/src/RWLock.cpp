@@ -1,6 +1,7 @@
 #include "../SysUtilities/stdafx.h"
 #include "../include/RWLock.h"
 #include "../include/AutoLock.h"
+#include "InDef.h"
 
 namespace SYS_UTL
 {
@@ -25,7 +26,7 @@ namespace SYS_UTL
 		/* Initialize the semaphore that acts as the write lock. */
 		if (!m_Sem.Init(1, 1))
 		{
-			DBG_ERROR;
+			DBG_E;
 			return;
 		}
 
@@ -53,7 +54,7 @@ namespace SYS_UTL
 	{
 		if (!__IsInit())
 		{
-			DBG_ERROR;
+			DBG_E;
 			return false;
 		}
 		/* *
@@ -80,7 +81,7 @@ namespace SYS_UTL
 	{
 		if (!__IsInit())
 		{
-			DBG_ERROR;
+			DBG_E;
 			return false;
 		}
 		CAutoLock lck(&m_Sec, SYS_UTL::LOCK_FLAG::lock_defer);
@@ -116,7 +117,7 @@ namespace SYS_UTL
 	{
 		if (!__IsInit())
 		{
-			DBG_ERROR;
+			DBG_E;
 			return;
 		}
 		CAutoLock lck(&m_Sec);
@@ -130,7 +131,7 @@ namespace SYS_UTL
 	{
 		if (!__IsInit())
 		{
-			DBG_ERROR;
+			DBG_E;
 			return false;
 		}
 		if (!m_Sem.Wait())
@@ -144,7 +145,7 @@ namespace SYS_UTL
 	{
 		if (!__IsInit())
 		{
-			DBG_ERROR;
+			DBG_E;
 			return false;
 		}
 		if (!m_Sem.TryWait(dwTimeOut))
@@ -158,7 +159,7 @@ namespace SYS_UTL
 	{
 		if (!__IsInit())
 		{
-			DBG_ERROR;
+			DBG_E;
 			return;
 		}
 		m_Sem.Post();

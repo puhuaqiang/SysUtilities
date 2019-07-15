@@ -123,6 +123,9 @@
     <ClInclude Include="..\include\Service.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\ConfigFile.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -195,6 +198,9 @@
       <Filter>src\net</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Service.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ConfigFile.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

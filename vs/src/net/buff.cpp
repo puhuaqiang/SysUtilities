@@ -300,10 +300,10 @@ int CBoundBuffer::Init(int iBlockSize)
 	int err = 0;
 	if (m_UseInternalLock){
 		SYS_UTL::CAutoLock lck(&m_lock);
-		err = Init(iBlockSize);
+		err = _Init(iBlockSize);
 	}
 	else{
-		err = Init(iBlockSize);
+		err = _Init(iBlockSize);
 	}
 	return err;
 }

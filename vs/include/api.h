@@ -219,6 +219,14 @@ namespace SYS_UTL
 	* @return [int]. 成功返回0.否则返回非0.
 	*/
 	SYS_UTL_CAPI int EnumRegKey(HKEY key, const char* subkey, std::list<std::string>* pSubKey, std::list<std::string>* pValues);
+
+
+	/*
+	* @brief	IEEE754单精度浮点数格式
+	* 	4个Byte
+	*/
+	SYS_UTL_CAPI BYTE GetBit(unsigned int dwValue, int iIndex);
+	SYS_UTL_CAPI float ByteToFloat(BYTE*);
 }
 
 #endif

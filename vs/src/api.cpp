@@ -1378,4 +1378,47 @@ namespace SYS_UTL
 		}
 		return 0;
 	}
+
+	BYTE GetBit(unsigned int dwValue, int iIndex)
+	{
+		unsigned int dwTemp = dwValue;
+		dwTemp = dwTemp << (32 - iIndex);
+		dwTemp = dwTemp >> 31;
+		return (BYTE)dwTemp;
+	}
+
+	float ByteToFloat(BYTE* buff)
+	{
+		//得到三部分数，直接相乘
+		int sign = 1;//为正数
+		float exp = 0;//阶数
+		float mantissa = 1;//尾数,默认为1
+		unsigned int dwVal = 0;
+		memcpy(&dwVal, buff, sizeof(unsigned int));
+		if (dwVal == 0){
+			return 0.0;
+		}
+
+		// 求符号位
+		if (GetBit(dwVal, 32) == 0)
+			sign = 1;
+		else
+			sign = -1;
+
+		//求阶码
+		int iPar = 0;
+		unsigned int dwPar = 0;
+		dwPar = dwVal;
+		dwPar <<= 1;
+		dwPar >>= 24;
+		exp = (float)(dwPar - 127);
+		exp = (float)pow(2, exp);
+
+		//求尾码
+		for (int i = 1; i < 24; i++)
+		{
+			mantissa += (float)(GetBit(dwVal, i)* pow(2, 0 - (24 - i)));
+		}
+		return sign * exp * mantissa;
+	}
 }

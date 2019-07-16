@@ -7,7 +7,7 @@ namespace SYS_UTL{
 /**
 \brief ╡ывВеДжцнд╪Ч. Window(INI)
 */
-class ConfigFile
+class SYS_UTL_CPPAPI ConfigFile
 {
 public:
 	/**

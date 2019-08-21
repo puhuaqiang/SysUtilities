@@ -49,7 +49,7 @@ namespace SYS_UTL
 {
 
 // For passing C-style string argument to a function.
-class StringArg // copyable
+class SYS_UTL_CPPAPI StringArg // copyable
 {
  public:
   StringArg(const char* str)
@@ -66,7 +66,7 @@ class StringArg // copyable
   const char* str_;
 };
 
-class StringPiece {
+class SYS_UTL_CPPAPI StringPiece {
  private:
   const char*   ptr_;
   int           length_;

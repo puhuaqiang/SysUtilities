@@ -12,6 +12,8 @@
 #define DBG_F DBG_I("FATAL ERROR");
 #endif
 
+extern HINSTANCE ghInstance;
+
 typedef VOID(WINAPI* sInitializeConditionVariable)(PCONDITION_VARIABLE ConditionVariable);
 typedef BOOL(WINAPI* sSleepConditionVariableCS)
 (PCONDITION_VARIABLE ConditionVariable,

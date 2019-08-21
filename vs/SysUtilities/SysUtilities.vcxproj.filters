@@ -25,6 +25,12 @@
     <Filter Include="src\net">
       <UniqueIdentifier>{60638775-7f34-4495-a91b-46b5877d7734}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\log">
+      <UniqueIdentifier>{a2b968f3-e5dd-4a3f-aa94-14e0934a3e3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\log">
+      <UniqueIdentifier>{883c9f6b-d5b7-4e18-825d-bf4eaad3d21b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -126,6 +132,12 @@
     <ClInclude Include="..\include\ConfigFile.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\log\Logging.h">
+      <Filter>include\log</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\log\LogStream.h">
+      <Filter>include\log</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -202,6 +214,12 @@
     </ClCompile>
     <ClCompile Include="..\src\ConfigFile.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\log\Logging.cpp">
+      <Filter>src\log</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\log\LogStream.cpp">
+      <Filter>src\log</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

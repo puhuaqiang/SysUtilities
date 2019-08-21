@@ -104,6 +104,8 @@
     <ClInclude Include="..\include\Debug.h" />
     <ClInclude Include="..\include\Event.h" />
     <ClInclude Include="..\include\Header.h" />
+    <ClInclude Include="..\include\log\Logging.h" />
+    <ClInclude Include="..\include\log\LogStream.h" />
     <ClInclude Include="..\include\Mutex.h" />
     <ClInclude Include="..\include\net\buff.h" />
     <ClInclude Include="..\include\net\InetAddress.h" />
@@ -137,6 +139,8 @@
     <ClCompile Include="..\src\Debug.cpp" />
     <ClCompile Include="..\src\Event.cpp" />
     <ClCompile Include="..\src\InDef.cpp" />
+    <ClCompile Include="..\src\log\Logging.cpp" />
+    <ClCompile Include="..\src\log\LogStream.cpp" />
     <ClCompile Include="..\src\Mutex.cpp" />
     <ClCompile Include="..\src\net\buff.cpp" />
     <ClCompile Include="..\src\net\InetAddress.cpp" />

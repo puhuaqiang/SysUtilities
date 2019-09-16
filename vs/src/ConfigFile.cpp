@@ -274,7 +274,7 @@ int ConfigFile::ReadStr(const char* lpszFileName,
 	}
 	if (!IsPathExists(lpszFileName))
 	{
-		DBG_E;
+		DBG_I("文件:%s,不存在", lpszFileName);
 		return -1;
 	}
 	::GetPrivateProfileString(lpszSection, lpszValueName, lpszDefaultValue == NULL ? "" : lpszDefaultValue, lpszValue, iValueBuffLen, lpszFileName);
@@ -294,7 +294,7 @@ int ConfigFile::ReadInt(const char* lpszFileName,
 	}
 	if (!IsPathExists(lpszFileName))
 	{
-		DBG_E;
+		DBG_I("文件:%s,不存在", lpszFileName);
 		return -1;
 	}
 	iValue = ::GetPrivateProfileInt(lpszSection, lpszValueName, iDefaultValue, lpszFileName);

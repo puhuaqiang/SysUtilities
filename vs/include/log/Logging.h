@@ -10,12 +10,12 @@ class SYS_UTL_CPPAPI Logger
 public:
 	enum LogLevel
 	{
-		TRACE,
-		DEBUG,
-		INFO,
-		WARN,
-		ERR,
-		FATAL,
+		SYSUTL_TRACE,
+		SYSUTL_DEBUG,
+		SYSUTL_INFO,
+		SYSUTL_WARN,
+		SYSUTL_ERROR,
+		SYSUTL_FATAL,
 		NUM_LOG_LEVELS,
 	};
 
@@ -94,17 +94,24 @@ inline Logger::LogLevel Logger::logLevel()
 	return g_logLevel;
 }
 
-#define LOG_TRACE if (SYS_UTL::LOG::Logger::logLevel() <= SYS_UTL::LOG::Logger::TRACE) \
-  SYS_UTL::LOG::Logger(__FILE__, __LINE__, SYS_UTL::LOG::Logger::TRACE, __FUNCTION__ /*__func__*/).stream()
-#define LOG_DEBUG if (SYS_UTL::Logger::logLevel() <= SYS_UTL::LOG::Logger::DEBUG) \
-	SYS_UTL::LOG::Logger(__FILE__, __LINE__, SYS_UTL::LOG::Logger::DEBUG, __FUNCTION__).stream()
-#define LOG_INFO if (SYS_UTL::Logger::logLevel() <= SYS_UTL::LOG::Logger::INFO) \
-  SYS_UTL::LOG::Logger(__FILE__, __LINE__).stream()
-#define LOG_WARN SYS_UTL::LOG::Logger(__FILE__, __LINE__, SYS_UTL::LOG::Logger::WARN).stream()
-#define LOG_ERROR SYS_UTL::LOG::Logger(__FILE__, __LINE__, SYS_UTL::LOG::Logger::ERR/*ERROR*/).stream()
-#define LOG_FATAL SYS_UTL::LOG::Logger(__FILE__, __LINE__, SYS_UTL::LOG::Logger::FATAL).stream()
-#define LOG_SYSERR SYS_UTL::LOG::Logger(__FILE__, __LINE__, false).stream()
-#define LOG_SYSFATAL SYS_UTL::LOG::Logger(__FILE__, __LINE__, true).stream()
+#define LOG_TRACE if (SYS_UTL::LOG::Logger::logLevel() <= SYS_UTL::LOG::Logger::SYSUTL_TRACE) \
+	SYS_UTL::LOG::Logger(__FILE__, __LINE__, SYS_UTL::LOG::Logger::SYSUTL_TRACE, __FUNCTION__ /*__func__*/).stream()
+#define LOG_DEBUG if (SYS_UTL::LOG::Logger::logLevel() <= SYS_UTL::LOG::Logger::SYSUTL_DEBUG) \
+	SYS_UTL::LOG::Logger(__FILE__, __LINE__, SYS_UTL::LOG::Logger::SYSUTL_DEBUG, __FUNCTION__).stream()
+#define LOG_INFO if (SYS_UTL::LOG::Logger::logLevel() <= SYS_UTL::LOG::Logger::SYSUTL_INFO) \
+	SYS_UTL::LOG::Logger(__FILE__, __LINE__).stream()
+#define LOG_WARN if (SYS_UTL::LOG::Logger::logLevel() <= SYS_UTL::LOG::Logger::SYSUTL_WARN) \
+	SYS_UTL::LOG::Logger(__FILE__, __LINE__, SYS_UTL::LOG::Logger::SYSUTL_WARN, __FUNCTION__).stream()
+#define LOG_ERROR if (SYS_UTL::LOG::Logger::logLevel() <= SYS_UTL::LOG::Logger::SYSUTL_ERROR) \
+	SYS_UTL::LOG::Logger(__FILE__, __LINE__, SYS_UTL::LOG::Logger::SYSUTL_ERROR, __FUNCTION__).stream()
+#define LOG_FATAL if (SYS_UTL::LOG::Logger::logLevel() <= SYS_UTL::LOG::Logger::SYSUTL_FATAL) \
+	SYS_UTL::LOG::Logger(__FILE__, __LINE__, SYS_UTL::LOG::Logger::SYSUTL_FATAL, __FUNCTION__).stream()
+
+//#define LOG_WARN SYS_UTL::LOG::Logger(__FILE__, __LINE__, SYS_UTL::LOG::Logger::SYSUTL_WARN).stream()
+//#define LOG_ERROR SYS_UTL::LOG::Logger(__FILE__, __LINE__, SYS_UTL::LOG::Logger::SYSUTL_ERROR/*ERROR*/).stream()
+//#define LOG_FATAL SYS_UTL::LOG::Logger(__FILE__, __LINE__, SYS_UTL::LOG::Logger::SYSUTL_FATAL).stream()
+//#define LOG_SYSERR SYS_UTL::LOG::Logger(__FILE__, __LINE__, false).stream()
+//#define LOG_SYSFATAL SYS_UTL::LOG::Logger(__FILE__, __LINE__, true).stream()
 
 const char* strerror_tl(int savedErrno);
 
@@ -122,7 +129,7 @@ T* CheckNotNull(Logger::SourceFile file, int line, const char *names, T* ptr)
 {
 	if (ptr == NULL)
 	{
-		Logger(file, line, Logger::FATAL).stream() << names;
+		Logger(file, line, Logger::SYSUTL_FATAL).stream() << names;
 	}
 	return ptr;
 }

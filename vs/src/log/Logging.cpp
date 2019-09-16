@@ -22,6 +22,7 @@ enum LOG_MODE
 };
 
 int gLogMode = 1;
+HANDLE gOutConsole = NULL;
 
 /*
 对应的颜色码表：
@@ -59,12 +60,13 @@ const char* strerror_tl(int savedErrno)
 
 Logger::LogLevel initLogLevel()
 {
-	int level = 0, tmp =0;
+	int level = 0, tmp =1;
 	char szPath[MAX_PATH];
 	_snprintf_s(szPath, _TRUNCATE, "%s\\SysUtilities.ini", SYS_UTL::GetCurrentPath(ghInstance));
 	SYS_UTL::ConfigFile::ReadInt(szPath, "LOG", "LEVEL", level, 0);
 	SYS_UTL::ConfigFile::ReadInt(szPath, "LOG", "MODEL", tmp, 1);
 	gLogMode = tmp;
+	DBG_I("level:%d model:%d", level, gLogMode);
 	return (Logger::LogLevel)level;
 	//if (::getenv("MUDUO_LOG_TRACE"))
 	//	return Logger::TRACE;
@@ -125,6 +127,16 @@ void defaultOutput(const char* msg, int len)
 		else{
 			FILE* pCout;
 			freopen_s(&pCout, "CONOUT$", "w", stdout);//重定向输出流至控制台
+			gOutConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+			if (NULL != gOutConsole)
+			{
+				SMALL_RECT rc;
+				rc.Top = 0;
+				rc.Left = 0;
+				rc.Bottom = -1;
+				rc.Right = -1;
+				SetConsoleWindowInfo(gOutConsole, TRUE, &rc);
+			}
 		}
 	}
 
@@ -204,7 +216,7 @@ void Logger::Impl::finish()
 }
 
 Logger::Logger(SourceFile file, int line)
-	: impl_(Logger::INFO, 0, file, line)
+	: impl_(Logger::SYSUTL_INFO, 0, file, line)
 {
 }
 
@@ -220,7 +232,7 @@ Logger::Logger(SourceFile file, int line, LogLevel level)
 }
 
 Logger::Logger(SourceFile file, int line, bool toAbort)
-	: impl_((LogLevel)(toAbort ? Logger::FATAL : Logger::ERR), errno, file, line)
+	: impl_((LogLevel)(toAbort ? Logger::SYSUTL_FATAL : Logger::SYSUTL_ERROR), errno, file, line)
 {
 }
 
@@ -230,16 +242,16 @@ Logger::~Logger()
 	const LogStream::Buffer& buf(stream().buffer());
 	if (gLogMode&LOG_MODE_CONSOLE)
 	{
-		if (impl_.level_ == Logger::WARN)
+		if (impl_.level_ == Logger::SYSUTL_WARN)
 		{
 			SetColor(6 | FOREGROUND_INTENSITY, 0);
 		}
-		else if (impl_.level_ >= Logger::ERR)
+		else if (impl_.level_ >= Logger::SYSUTL_ERROR)
 		{
 			SetColor(FOREGROUND_RED | FOREGROUND_INTENSITY, 0);
 		}
 		g_output(buf.data(), buf.length());
-		if (impl_.level_ >= Logger::WARN)
+		if (impl_.level_ >= Logger::SYSUTL_WARN)
 		{
 			SetColor(7, 0);
 		}
@@ -253,7 +265,7 @@ Logger::~Logger()
 			OutputDebugString(lpInfo);
 		}
 	}
-	if (gLogMode&LOG_MODE_FILE)
+	if ((gLogMode&LOG_MODE_FILE) || (impl_.level_ == Logger::SYSUTL_FATAL))
 	{
 		std::fstream fs;
 		char szPath[MAX_PATH];
@@ -264,7 +276,7 @@ Logger::~Logger()
 		}
 		fs.close();
 	}
-	if (impl_.level_ == Logger::FATAL)
+	if (impl_.level_ == Logger::SYSUTL_FATAL)
 	{
 		g_flush();
 		abort();

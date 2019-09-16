@@ -348,7 +348,7 @@ int CreateSocketFromDuplicate(char* pProtocolInfo, int iDataLen, int& skt)
 
 int GetSktPeerInfo(int sockfd, char* ip, int len, int* port)
 {
-	InetAddress localAddr(SOCKETS::getLocalAddr(sockfd));
+	InetAddress localAddr(SOCKETS::getPeerAddr(sockfd));
 	strncpy_s(ip, len - 1, localAddr.toIp().data(), min(len-1, localAddr.toIp().length()));
 	if (NULL != port)
 	{

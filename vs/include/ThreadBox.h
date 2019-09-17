@@ -16,6 +16,10 @@ namespace SYS_UTL
 		CThreadBox();
 		virtual ~CThreadBox();
 
+		static bool Run(DWORD(WINAPI*)(void*), void* pParam);
+		static bool RunEx(std::function<void(void* pParam)>, void* pParam);
+		/// len <= 1024
+		static bool RunEx2(std::function<void(void* lpData, int len, void* pParam)>, void* lpData, int len, void* pParam);
 	public:
 		/**
 		* \brief ≥ı ºªØ. 

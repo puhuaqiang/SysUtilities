@@ -38,6 +38,94 @@ namespace SYS_UTL
 
 	}
 
+	struct _CONTEXT_THREAD_PAR
+	{
+		std::function<void(void*)> cb;
+		std::function<void(void* lpData, int len, void* pParam)> cb2;
+		void* par;
+		int len;
+		BYTE buff[1024];
+	};
+
+	DWORD WINAPI CallThreadFn(void* par)
+	{
+		_CONTEXT_THREAD_PAR* p = (_CONTEXT_THREAD_PAR*)par;
+		if (NULL == p){
+			return -1;
+		}
+		if (p->len > 0)
+		{
+			if (p->cb2)
+			{
+				p->cb2(p->buff, p->len, p->par);
+			}
+		}
+		else{
+			if (p->cb)
+			{
+				p->cb(p->par);
+			}
+		}
+		delete p;
+		return 0;
+	}
+
+	bool CThreadBox::RunEx(std::function<void(void*)> cb, void* pParam)
+	{
+		_CONTEXT_THREAD_PAR* p = new _CONTEXT_THREAD_PAR();
+		if (NULL == p){
+			return false;
+		}
+		p->cb = cb;
+		p->par = pParam;
+		p->len = 0;
+		DWORD dwThreadId = 0;
+		HANDLE hThread = CreateThread(0, 0, CallThreadFn, p, 0, &dwThreadId);
+		if (hThread) {
+			CloseHandle(hThread);
+			return true;
+		}
+		return false;
+	}
+
+	bool CThreadBox::RunEx2(std::function<void(void* lpData, int len, void* pParam)> cb, void* lpData, int len, void* pParam)
+	{
+		if (len <= 0 || (lpData == NULL))
+		{
+			return false;
+		}
+		if (len > 1024)
+		{
+			return false;
+		}
+		_CONTEXT_THREAD_PAR* p = new _CONTEXT_THREAD_PAR();
+		if (NULL == p){
+			return false;
+		}
+		p->cb2 = cb;
+		p->par = pParam;
+		p->len = len;
+		memcpy(p->buff, lpData, len);
+		DWORD dwThreadId = 0;
+		HANDLE hThread = CreateThread(0, 0, CallThreadFn, p, 0, &dwThreadId);
+		if (hThread) {
+			CloseHandle(hThread);
+			return true;
+		}
+		return false;
+	}
+
+	bool CThreadBox::Run(DWORD(WINAPI* cb)(void*), void* pParam)
+	{
+		DWORD dwThreadId = 0;
+		HANDLE hThread = CreateThread(0, 0, cb, pParam, 0, &dwThreadId);
+		if (hThread) {
+			CloseHandle(hThread);
+			return true;
+		}
+		return false;
+	}
+
 	int	CThreadBox::Init(int iPacketSize /*= 1024*/, BOOL bPacket /*= TRUE*/, BOOL bCreateEvent /*= TRUE*/)
 	{
 		CAutoLock Lock(&m_mutexPacket);

@@ -706,95 +706,107 @@ unsigned int WriteFromTcp(SOCKET skt, const char* pBuff, int iBuffLen, int* erro
 
 unsigned int WriteFromUDP(SOCKET skt, const char* pBuff, int iBuffLen, struct sockaddr& to, int tolen, int* error /*= nullptr*/, unsigned int uiTimeOut /*= 5000*/)
 {
-	int iSendLen = 0, iRet = 0, iError = 0;
-	bool bSendData = true; //是否可以发送数据
-	unsigned int uiCurTimeOut = GetTickCount();
-	fd_set fdWrite, fdExcep;
-	struct timeval stTimeOut;
-	if (NULL != error)
-	{
-		*error = iError;
-	}
+	int iSendLen = 0, iError = 0, iRet = 0;
+
 	if (nullptr == pBuff || iBuffLen <= 0)
 	{
 		DBG_E;
 		return -1;
 	}
-	do
+
+	if (uiTimeOut <= 0)
 	{
-		if (iBuffLen - iSendLen <= 0)
+		iRet = ::sendto(skt, pBuff, iBuffLen, 0, (struct sockaddr*)&to, sizeof(sockaddr));
+		iSendLen = iRet;
+	}
+	else{
+
+		bool bSendData = true; //是否可以发送数据
+		unsigned int uiCurTimeOut = GetTickCount();
+		fd_set fdWrite, fdExcep;
+		struct timeval stTimeOut;
+		if (NULL != error)
 		{
-			//数据发送完成.
-			break;
+			*error = iError;
 		}
 
-		if (!bSendData)
+		do
 		{
-			FD_ZERO(&fdWrite);
-			FD_ZERO(&fdExcep);
-			FD_SET(skt, &fdWrite);
-			FD_SET(skt, &fdExcep);
+			if (iBuffLen - iSendLen <= 0)
+			{
+				//数据发送完成.
+				break;
+			}
 
-			stTimeOut.tv_sec = 0;
-			stTimeOut.tv_usec = 10000;
-			int iRet = select(-1/*skt + 1*/, NULL, &fdWrite, &fdExcep, &stTimeOut);
-			if (iRet > 0)
+			if (!bSendData)
 			{
-				iRet = FD_ISSET(skt, &fdExcep);
-				if (iRet)
-				{//error
-					iError = -1;
-					DBG_E;
-					break;
-				}
-				//是否有数据
-				iRet = FD_ISSET(skt, &fdWrite);
-				if (iRet)
-				{
-					bSendData = true;
-				}
-			}
-			else{
-				// iret == 0 超时
-				if (iRet == SOCKET_ERROR)
-				{
-					iError = -2;
-					DBG_E;
-					break;
-				}
-				if (skt == INVALID_SOCKET)
-				{
-					iError = -3;
-					DBG_E;
-					break;
-				}
-			}
-		}
-		else {
-			iRet = ::sendto(skt, pBuff + iSendLen, iBuffLen - iSendLen, 0, &to, (socklen_t)tolen);
-			bSendData = false;
-			if (iRet > 0)
-			{
-				iSendLen += iRet;
-			}
-			if (iRet == -1)
-			{
-				int iErr = WSAGetLastError();
-				if (iErr != WSAEWOULDBLOCK)
-				{
-					iError = -4;
-					DBG_I("SOCKET err:%d", WSAGetLastError());
-					break;
-				}
-			}
-		}
-		if ((!bSendData) && abs((int)(GetTickCount() - uiCurTimeOut)) >= (int)uiTimeOut)
-		{
-			//超时退出
-			break;
-		}
+				FD_ZERO(&fdWrite);
+				FD_ZERO(&fdExcep);
+				FD_SET(skt, &fdWrite);
+				FD_SET(skt, &fdExcep);
 
-	} while (iSendLen < iBuffLen);
+				stTimeOut.tv_sec = 0;
+				stTimeOut.tv_usec = 10000;
+				int iRet = select(-1/*skt + 1*/, NULL, &fdWrite, &fdExcep, &stTimeOut);
+				if (iRet > 0)
+				{
+					iRet = FD_ISSET(skt, &fdExcep);
+					if (iRet)
+					{//error
+						iError = -1;
+						DBG_E;
+						break;
+					}
+					//是否有数据
+					iRet = FD_ISSET(skt, &fdWrite);
+					if (iRet)
+					{
+						bSendData = true;
+					}
+				}
+				else{
+					// iret == 0 超时
+					if (iRet == SOCKET_ERROR)
+					{
+						iError = -2;
+						DBG_E;
+						break;
+					}
+					if (skt == INVALID_SOCKET)
+					{
+						iError = -3;
+						DBG_E;
+						break;
+					}
+				}
+			}
+			else {
+				iRet = ::sendto(skt, pBuff + iSendLen, iBuffLen - iSendLen, 0, &to, (socklen_t)tolen);
+				bSendData = false;
+				if (iRet > 0)
+				{
+					iSendLen += iRet;
+				}
+				if (iRet == -1)
+				{
+					int iErr = WSAGetLastError();
+					if (iErr != WSAEWOULDBLOCK)
+					{
+						iError = -4;
+						DBG_I("SOCKET err:%d", WSAGetLastError());
+						break;
+					}
+				}
+			}
+			if ((!bSendData) && abs((int)(GetTickCount() - uiCurTimeOut)) >= (int)uiTimeOut)
+			{
+				//超时退出
+				break;
+			}
+
+		} while (iSendLen < iBuffLen);
+	}
+
 	if (nullptr != error){
 		*error = iError;
 	}

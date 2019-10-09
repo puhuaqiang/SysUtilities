@@ -36,6 +36,125 @@ void ThreadPoolProc(void* lpTask, int iTaskDataLen, void* lpUsr)
 int _tmain(int argc, _TCHAR* argv[])
 {
 	std::cin.ignore();
+	if (true){// 
+		SYS_UTL::NET::CNetClient clt;
+		std::cout << "开始连接." << std::endl;
+		clt.ConnectSocket(SYS_UTL::NET::TRANS_PROTOCOL_TYPE_TCP, "192.168.1.253", 1031);
+		clt.SetSktNoBlock();
+		if (!clt.IsError() && clt.IsValidSkt()) {
+			std::cout << "链接成功." << std::endl;
+			std::string str;
+			char buff[1024];
+			int len = 0;
+
+			while (true)
+			{
+				str = "";
+				std::cout << "输入:" << std::endl;
+				std::cin >> str;
+
+				if (str.length()) {
+					len = clt.Write((const char*)str.data(), str.length(), 2000);
+					std::cout << "w:" << len << std::endl;
+				}
+
+				len = clt.Read(buff, 1024, 0, 2000);
+				if (len > 0) {
+					buff[len] = '\0';
+					std::cout << "客户端接收到数据:" << buff << std::endl;
+				}
+			}
+		}
+		else {
+			std::cout << "链接失败." << std::endl;
+		}
+	}
+
+	std::cin.ignore();
+	if (true){// 
+		std::cout << "TCP." << std::endl;
+		SYS_UTL::NET::CNetServer cNetServer;
+		int err = cNetServer.OpenSocket(SYS_UTL::NET::TRANS_PROTOCOL_TYPE_TCP, nullptr, 5000);
+		if (err != 0 || cNetServer.IsError() || !cNetServer.IsValidSkt()){
+			std::cout << "OpenSocket err" << std::endl;
+			return -1;
+		}
+		cNetServer.SetSktNoBlock();
+		cNetServer.SetTcpNoDelay();
+		cNetServer.SetSktReuseAddr(true);
+		SYS_UTL::NET::CNetClient* pNetClient = nullptr;
+
+		while (true)
+		{
+			if (cNetServer.Accept(pNetClient)){
+				pNetClient->SetSktNoBlock();
+				new std::thread([](SYS_UTL::NET::CNetClient*& skt){
+					char szData[1024 * 8], log[1024 * 4];
+					char tmp[16];
+					int len = 0;
+					BYTE heard_pack[] = { 0x5A, 0x51, 0x57, 0x4C, 0x2D, 0x45, 0x74, 0x68, 0x52, 0x53, 0x2D, 0x50, 0x4F, 0x52, 0x54, 0x31 };
+					BYTE get_sys_par[] = { 0xFE, 0x00, 0x01, 0x00, 0x04, 0x00, 0x00, 0x00, 0xB8, 0xEF, 0xAA };
+					BYTE get_sys_par1[] = { 0xFE, 0x01, 0x01, 0x00, 0x04, 0x00, 0x00, 0x00, 0xB8, 0xEF, 0xAA };
+					while (true)
+					{
+						szData[0] = '\0';
+						len = skt->Read(szData, 1024 * 8);
+						if (len <= 0) {
+							continue;
+						}
+
+						log[0] = '\0';
+						_snprintf_s(log, _TRUNCATE, "接收到数据: ");
+						for (int i = 0; i < len; i++)
+						{
+							_snprintf_s(tmp, _TRUNCATE, "%02X ", szData[i]);
+							strncat_s(log, _TRUNCATE, tmp, _TRUNCATE);
+						}
+						std::cout << log << std::endl;
+						OutputDebugString(log);
+
+						if (!memcmp(szData, heard_pack, sizeof(heard_pack)))
+						{
+							std::cout << "心跳包" << std::endl;
+
+							int ret = skt->Write((const char*)get_sys_par, sizeof(get_sys_par), 500);
+							std::cout << "发生数据长度:" << ret << " , " << ((ret == sizeof(get_sys_par)) ? "成功" : "失败") << std::endl;
+
+							BYTE buff[16];
+							int length = sizeof(get_sys_par1);
+							memcpy(buff, get_sys_par1, length);
+							int cnt = 0;
+							for (int i = 0; i < length - 1; i++)
+							{
+								cnt += get_sys_par1[i];
+							}
+							buff[length - 1] = cnt;
+
+							log[0] = '\0';
+							_snprintf_s(log, _TRUNCATE, "xx: ");
+							for (int i = 0; i < length; i++)
+							{
+								_snprintf_s(tmp, _TRUNCATE, "%02X ", buff[i]);
+								strncat_s(log, _TRUNCATE, tmp, _TRUNCATE);
+							}
+							std::cout << log << std::endl;
+							OutputDebugString(log);
+
+							ret = skt->Write((const char*)buff, length, 500);
+							std::cout << "发生数据长度:" << ret << " , " << ((ret == sizeof(get_sys_par)) ? "成功" : "失败") << std::endl;
+						}
+						//strncat_s(szData, _TRUNCATE, "—SERVER", _TRUNCATE);
+						//skt->Write(szData, strlen(szData), 2000);
+					}
+				}, std::ref(pNetClient));
+			}
+			else{
+				Sleep(10);
+			}
+		}
+	}
+
+	std::cin.ignore();
 	if(true){// tcp
 		std::cout << "TCP." << std::endl;
 		SYS_UTL::NET::CNetServer cNetServer;

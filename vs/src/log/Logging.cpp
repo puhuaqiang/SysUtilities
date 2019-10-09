@@ -121,7 +121,7 @@ void defaultOutput(const char* msg, int len)
 	if (!lock.test_and_set()){
 		if (!::AllocConsole())
 		{
-			lock.clear();
+			//lock.clear();
 			OutputDebugString("error");
 		}
 		else{

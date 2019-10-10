@@ -199,11 +199,14 @@ SOCKET ConnectSocket(TRANS_PROTOCOL_TYPE nType, const char* host, unsigned short
 	argp = 1;
 	int err = ioctlsocket(sockfd, FIONBIO, (u_long*)&argp);
 	if (err != 0){
+		DBG_E;
 		//SetErrorCode(SOCKET_ERROR, __LINE__);
 	}
 
 	InetAddress addr(host,port);
 	err = SYS_UTL::NET::SOCKETS::connectwrap(sockfd, addr.getSockAddr());
+	/*
+	阻塞模式使用
 	if ( err == 0 )
 	{
 		if (NULL != error)
@@ -217,7 +220,7 @@ SOCKET ConnectSocket(TRANS_PROTOCOL_TYPE nType, const char* host, unsigned short
 		::closesocket(sockfd);
 		DBG_E;
 		return INVALID_SOCKET;
-	}
+	}*/
 
 	fd_set writefds;
 	struct timeval timeout;

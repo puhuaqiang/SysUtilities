@@ -166,7 +166,7 @@ SOCKET OpenSocket(TRANS_PROTOCOL_TYPE nType, const char* host, unsigned short po
 #endif
 }
 
-SOCKET ConnectSocket(TRANS_PROTOCOL_TYPE nType, const char* host, unsigned short port, int* error /*= nullptr*/, bool bConn /*= true*/)
+SOCKET ConnectSocket(TRANS_PROTOCOL_TYPE nType, const char* host, unsigned short port, unsigned int _timeout, int* error /*= nullptr*/, bool bConn /*= true*/)
 {
 	if (nullptr != error)
 	{
@@ -194,8 +194,16 @@ SOCKET ConnectSocket(TRANS_PROTOCOL_TYPE nType, const char* host, unsigned short
 		DBG_E;
 		return INVALID_SOCKET;
 	}
+
+	uint32_t argp;
+	argp = 1;
+	int err = ioctlsocket(sockfd, FIONBIO, (u_long*)&argp);
+	if (err != 0){
+		//SetErrorCode(SOCKET_ERROR, __LINE__);
+	}
+
 	InetAddress addr(host,port);
-	int err = SYS_UTL::NET::SOCKETS::connectwrap(sockfd, addr.getSockAddr());
+	err = SYS_UTL::NET::SOCKETS::connectwrap(sockfd, addr.getSockAddr());
 	if ( err == 0 )
 	{
 		if (NULL != error)
@@ -217,7 +225,7 @@ SOCKET ConnectSocket(TRANS_PROTOCOL_TYPE nType, const char* host, unsigned short
 	FD_ZERO(&writefds);
 	FD_SET( sockfd, &writefds );
 
-	timeout.tv_sec = 5; //timeout 
+	timeout.tv_sec = _timeout; //timeout 
 	timeout.tv_usec = 0;
 
 	int ret = select(sockfd+1, NULL, &writefds, NULL, &timeout);
@@ -1026,7 +1034,7 @@ CNetClient::~CNetClient()
 
 }
 
-int CNetClient::ConnectSocket(TRANS_PROTOCOL_TYPE nType, const char* host, unsigned short port, int* error /*= nullptr*/, bool bConn /*= true*/)
+int CNetClient::ConnectSocket(TRANS_PROTOCOL_TYPE nType, const char* host, unsigned short port, unsigned int _timeout, int* error /*= nullptr*/, bool bConn /*= true*/)
 {
 	if (nType != m_nTransProType)
 	{
@@ -1034,7 +1042,7 @@ int CNetClient::ConnectSocket(TRANS_PROTOCOL_TYPE nType, const char* host, unsig
 	}
 	SetErrorCode(0, __LINE__);
 	int iErrorCode = 0;
-	SOCKET skt = SYS_UTL::NET::ConnectSocket(m_nTransProType, host, port, &iErrorCode, bConn);
+	SOCKET skt = SYS_UTL::NET::ConnectSocket(m_nTransProType, host, port, _timeout, &iErrorCode, bConn);
 	if (iErrorCode != 0)
 	{
 		DBG_E;

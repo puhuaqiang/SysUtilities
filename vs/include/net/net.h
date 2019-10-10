@@ -161,10 +161,11 @@ public:
 	* @param host IP地址. 绑定到的IP地址 host == nullptr， 则使用[INADDR_ANY]
 	* @param port 端口
 	* @param error 错误码
+	* @param timeout 超时时间,秒
 	* @param bConn 针对UDP有效,如果[true]与UDP服务端建立连接,[false]不建立连接
 	* @return int 返回有效或无效套接字
 	*/
-	int ConnectSocket(TRANS_PROTOCOL_TYPE nType, const char* host, unsigned short port, int* error = nullptr, bool bConn = true);
+	int ConnectSocket(TRANS_PROTOCOL_TYPE nType, const char* host, unsigned short port, unsigned int timeout = 3, int* error = nullptr, bool bConn = true);
 
 	/**
 	* @brief 关联套接字. 接口内部自动设置为 [TRANS_PROTOCOL_TYPE_TCP]
@@ -301,7 +302,7 @@ SOCKET OpenSocket(TRANS_PROTOCOL_TYPE nType, const char* host, unsigned short po
 * @param bConn 针对UDP有效,如果[true]与UDP服务端建立连接,[false]不建立连接
 * @return int 返回有效或无效套接字
 */
-SOCKET ConnectSocket(TRANS_PROTOCOL_TYPE nType, const char* host, unsigned short port, int* error = NULL, bool bConn = true);
+SOCKET ConnectSocket(TRANS_PROTOCOL_TYPE nType, const char* host, unsigned short port, unsigned int timeout = 3, int* error = NULL, bool bConn = true);
 
 /**
 * @brief 复制套接字.

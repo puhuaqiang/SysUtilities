@@ -9,6 +9,7 @@ namespace SYS_UTL
 {
 	/**
 	* \brief 读写锁封装类.
+	* 建议不要递归加锁
 	*/
 	class SYS_UTL_CPPAPI CRWLock
 	{

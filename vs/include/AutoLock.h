@@ -135,6 +135,7 @@ namespace SYS_UTL
 
 	/**
 	* \brief 自定加/释放 [读写锁]
+	* 建议不要递归加锁
 	*/
 	class SYS_UTL_CPPAPI CAutoRWLock
 	{

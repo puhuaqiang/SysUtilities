@@ -37,6 +37,26 @@ int _tmain(int argc, _TCHAR* argv[])
 {
 	std::cin.ignore();
 	if (true){// 
+		SYS_UTL::ThreadPool pool(4);
+		std::vector< std::future<int> > results;
+
+		for (int i = 0; i < 8; ++i) {
+			results.emplace_back(
+				pool.enqueue([i] {
+				std::cout << "hello " << i << std::endl;
+				std::this_thread::sleep_for(std::chrono::seconds(1));
+				std::cout << "world " << i << std::endl;
+				return i*i;
+			})
+				);
+		}
+
+		for (auto && result : results)
+			std::cout << result.get() << ' ';
+		std::cout << std::endl;
+	}
+	std::cin.ignore();
+	if (true){// 
 		SYS_UTL::NET::CNetClient clt;
 		std::cout << "开始连接." << std::endl;
 		clt.ConnectSocket(SYS_UTL::NET::TRANS_PROTOCOL_TYPE_TCP, "192.168.1.253", 1031);

@@ -28,6 +28,7 @@ namespace SYS_UTL
 		* \param bCreateEvent 是否创建事件,当有数据包写入，则激活事件.
 		*/
 		int Init(int iPacketSize = 1024, BOOL bPacket = TRUE, BOOL bCreateEvent = TRUE);
+		int Init(int iPacketSize, BOOL bPacket, BOOL bCreateEvent, const char* lpName);
 		void UnInit();
 		/**
 		* \brief 启动线程.
@@ -78,6 +79,7 @@ namespace SYS_UTL
 		* \brief 线程ID.
 		*/
 		DWORD GetCurrentThreadId();
+		const char* GetThreadName();
 
 	protected:
 		static DWORD WINAPI Process(void* lpThis);
@@ -117,6 +119,8 @@ namespace SYS_UTL
 		int m_iDataLen;
 
 		SYS_UTL::CCritSec m_mutexPacket;
+		/**线程标识*/
+		char m_szName[64];
 	};
 }
 

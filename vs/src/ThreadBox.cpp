@@ -31,6 +31,7 @@ namespace SYS_UTL
 
 		m_bPacket = TRUE;
 		m_bCreateEvent = TRUE;
+		ZeroMemory(m_szName, sizeof(m_szName));
 	}
 
 	CThreadBox::~CThreadBox()
@@ -145,6 +146,15 @@ namespace SYS_UTL
 		m_bInit = TRUE;
 
 		return 0;
+	}
+
+	int CThreadBox::Init(int iPacketSize /*= 1024*/, BOOL bPacket, BOOL bCreateEvent, const char* lpName)
+	{
+		if (NULL != lpName)
+		{
+			_snprintf_s(m_szName, _TRUNCATE, "%s", lpName);
+		}
+		return Init(iPacketSize, bPacket, bCreateEvent);
 	}
 
 	void CThreadBox::UnInit()
@@ -570,4 +580,10 @@ namespace SYS_UTL
 	{
 		return GetThreadId(m_hObject);
 	}
+
+	const char* CThreadBox::GetThreadName()
+	{
+		return m_szName;
+	}
+
 }

@@ -18,13 +18,13 @@ namespace SYS_UTL
 		assert(NULL != plock);
 		m_lpLock->Lock();
 		m_owns = TRUE;
-	};
+	}
 	CAutoLock::CAutoLock(SYS_UTL::CCritSec *plock, SYS_UTL::LOCK_FLAG::__defer_lock_t)
 	{
 		__Initialize();
 		m_lpLock = plock;
 		assert(NULL != plock);
-	};
+	}
 	CAutoLock::CAutoLock(SYS_UTL::CCritSec *plock, SYS_UTL::LOCK_FLAG::__defer_req_lock_t)
 	{
 		__Initialize();
@@ -35,7 +35,7 @@ namespace SYS_UTL
 		{//¼¤»î³É¹¦.
 			m_bRequireSucc = TRUE;
 		}
-	};
+	}
 	CAutoLock::~CAutoLock()
 	{
 		if (m_owns)
@@ -53,7 +53,7 @@ namespace SYS_UTL
 		}
 		m_bRequire = FALSE;
 		m_bRequireSucc = FALSE;
-	};
+	}
 
 	BOOL CAutoLock::Owns() const
 	{

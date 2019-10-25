@@ -11,6 +11,7 @@
 #include <SysUtilities/include/Cond.h>
 #include <SysUtilities/include/Timestamp.h>
 #include <SysUtilities/include/TimerQueue.h>
+#include <SysUtilities/include/AutoLock.h>
 
 #ifdef _DEBUG
 #pragma comment(lib, "SysUtilities/lib/SysUtilitiesd.lib")
@@ -35,6 +36,45 @@ void ThreadPoolProc(void* lpTask, int iTaskDataLen, void* lpUsr)
 
 int _tmain(int argc, _TCHAR* argv[])
 {
+	std::cin.ignore();
+	if (true)
+	{
+		/***
+		* @brief 自动加锁/释放锁测试
+		* 延迟加锁测试
+		*/
+		SYS_UTL::CCritSec cs;
+		{
+			SYS_UTL::CAutoLock lck(&cs);
+			std::cout << "加锁成功 line:"<<__LINE__ << std::endl;
+			{
+				SYS_UTL::CAutoLock lck(&cs, SYS_UTL::LOCK_FLAG::lock_defer);
+				lck.Lock(1000);
+				if (lck.Owns())
+				{
+					std::cout << "加锁成功 line:" << __LINE__ << std::endl;
+				}
+				else{
+					std::cout << "加锁失败 line:" << __LINE__ << std::endl;
+				}
+				{
+					SYS_UTL::CAutoLock lck(&cs, SYS_UTL::LOCK_FLAG::lock_defer);
+					lck.Lock(2000);
+					if (lck.Owns())
+					{
+						std::cout << "加锁成功 line:" << __LINE__ << std::endl;
+					}
+					else{
+						std::cout << "加锁失败 line:" << __LINE__ << std::endl;
+					}
+				}
+			}
+		}
+		{
+			SYS_UTL::CAutoLock lck(&cs);
+			std::cout << "加锁成功 line:" << __LINE__ << std::endl;
+		}
+	}
 	std::cin.ignore();
 	if (true){// 
 		SYS_UTL::ThreadPool pool(4);

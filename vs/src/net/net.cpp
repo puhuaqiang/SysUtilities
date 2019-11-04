@@ -526,90 +526,102 @@ unsigned int ReadFromUdp(SOCKET skt, char* pBuff, int iBuffLen, struct sockaddr&
 		DBG_E;
 		return -1;
 	}
-	do
+
+	if (uiTimeOut <= 0)
 	{
-		if (iDataLen > 0)
+		iRet = ::recvfrom(skt, pBuff, iBuffLen, 0, &from, (socklen_t*)&fromlen);
+		if (iRet > 0)
 		{
-			//读取到数据直接返回.
-			break;
+			iDataLen = iRet;
 		}
-
-		if (!bRecvData)
+	}
+	else{
+		do
 		{
-			FD_ZERO(&fdRead);
-			FD_ZERO(&fdExcep);
-			FD_SET(skt, &fdRead);
-			FD_SET(skt, &fdExcep);
-
-			stTimeOut.tv_sec = 0;
-			stTimeOut.tv_usec = 10000;
-			iRet = select(-1/*skt + 1*/, &fdRead, NULL, &fdExcep, &stTimeOut);
-			if (iRet > 0)
+			if (iDataLen > 0)
 			{
-				iRet = FD_ISSET(skt, &fdExcep);
-				if (iRet)
-				{//error
-					iError = -1;
-					DBG_E;
-					break;
-				}
-				//是否有数据
-				iRet = FD_ISSET(skt, &fdRead);
-				if (iRet)
+				//读取到数据直接返回.
+				break;
+			}
+
+			if (!bRecvData)
+			{
+				FD_ZERO(&fdRead);
+				FD_ZERO(&fdExcep);
+				FD_SET(skt, &fdRead);
+				FD_SET(skt, &fdExcep);
+
+				stTimeOut.tv_sec = 0;
+				stTimeOut.tv_usec = 10000;
+				iRet = select(-1/*skt + 1*/, &fdRead, NULL, &fdExcep, &stTimeOut);
+				if (iRet > 0)
 				{
-					bRecvData = true;
+					iRet = FD_ISSET(skt, &fdExcep);
+					if (iRet)
+					{//error
+						iError = -1;
+						DBG_E;
+						break;
+					}
+					//是否有数据
+					iRet = FD_ISSET(skt, &fdRead);
+					if (iRet)
+					{
+						bRecvData = true;
+					}
+					else{
+						DBG_E;
+					}
 				}
 				else{
-					DBG_E;
+					// iret == 0 超时
+					if (iRet == SOCKET_ERROR)
+					{
+						iError = -2;
+						DBG_E;
+						break;
+					}
+					if (skt == INVALID_SOCKET)
+					{
+						iError = -3;
+						DBG_E;
+						break;
+					}
 				}
 			}
-			else{
-				// iret == 0 超时
-				if (iRet == SOCKET_ERROR)
+			else {
+				iRet = ::recvfrom(skt, pBuff, iBuffLen, 0, &from, (socklen_t*)&fromlen);
+				bRecvData = false;
+				if (iRet > 0)
 				{
-					iError = -2;
-					DBG_E;
-					break;
+					iDataLen = iRet;
 				}
-				if (skt == INVALID_SOCKET)
-				{
+				if (iRet == 0)
+				{//Server CloseSocket
 					iError = -3;
 					DBG_E;
 					break;
 				}
-			}
-		}
-		else {
-			iRet = ::recvfrom(skt, pBuff, iBuffLen, 0, &from, (socklen_t*)&fromlen);
-			bRecvData = false;
-			if (iRet > 0)
-			{
-				iDataLen = iRet;
-			}
-			if (iRet == 0)
-			{//Server CloseSocket
-				iError = -3;
-				DBG_E;
-				break;
-			}
-			if (iRet == SOCKET_ERROR)
-			{
-				int iErr = WSAGetLastError();
-				if (iErr != WSAEWOULDBLOCK)
-				{//没有数据
-					iError = SOCKET_ERROR;
-					DBG_I("SOCKET err:%d", WSAGetLastError());
-					break;
+				if (iRet == SOCKET_ERROR)
+				{
+					int iErr = WSAGetLastError();
+					if (iErr != WSAEWOULDBLOCK)
+					{//没有数据
+						iError = SOCKET_ERROR;
+						DBG_I("SOCKET err:%d", WSAGetLastError());
+						break;
+					}
 				}
 			}
-		}
-		if ((!bRecvData) && abs((int)(GetTickCount() - uiCurTimeOut)) >= (int)uiTimeOut)
-		{
-			//超时退出
-			break;
-		}
+			if ((!bRecvData) && abs((int)(GetTickCount() - uiCurTimeOut)) >= (int)uiTimeOut)
+			{
+				//超时退出
+				break;
+			}
 
-	} while (iDataLen < iBuffLen);
+		} while (iDataLen < iBuffLen);
+	}
+
 	if (nullptr != error)
 	{
 		*error = iError;

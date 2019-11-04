@@ -238,7 +238,7 @@ unsigned int ReadFromTcp(SOCKET skt, char* pBuff, int iBuffLen, const int iReadL
 * @param from 对端地址信息
 * @param fromlen 地址信息大小
 * @param error 输出错误码
-* @param uiTimeOut 超时时间,=0,也会保证[select]检测一次
+* @param uiTimeOut 超时时间,=0,不会使用[select]检测
 * @return 读取的数据大小
 */
 unsigned int ReadFromUdp(SOCKET skt, char* pBuff, int iBuffLen, struct sockaddr& from, int fromlen, int* error = NULL, unsigned int uiTimeOut = 5000);
@@ -262,7 +262,7 @@ unsigned int WriteFromTcp(SOCKET skt, const char* pBuff, int iBuffLen, int* erro
 * @param from 对端地址信息
 * @param fromlen 地址信息大小
 * @param error 输出错误码
-* @param uiTimeOut 超时时间,=0,也会保证[select]检测一次
+* @param uiTimeOut 超时时间,=0,不会使用[select]检测
 * @return 写入的数据大小
 */
 unsigned int WriteFromUDP(SOCKET skt, const char* pBuff, int iBuffLen, struct sockaddr& to, int tolen, int* error = NULL, unsigned int uiTimeOut = 5000);

@@ -121,7 +121,7 @@ namespace SYS_UTL
 		* \param dwLength 共享内存最大长度
 		* \return
 		*/
-		int	Init(CommunicatorType nType, const char* lpszShareMemoryName, int iMaxPerPacketSize, int iMaxPacketCount);
+		int	Init(CommunicatorType nType, const char* lpszMutexName, const char* lpszShareMemoryName, int iMaxPerPacketSize, int iMaxPacketCount);
 		/**
 		* \brief 释放资源
 		*/
@@ -154,7 +154,7 @@ namespace SYS_UTL
 		* \param dwTimeOut 超时时间.
 		* \return 0成功,否则失败
 		*/
-		int Write(int iPacketIndex, BYTE* pDataBuff, int iDataLen, DWORD dwTimeOut);
+		int TryWrite(int iPacketIndex, BYTE* pDataBuff, int iDataLen, DWORD dwTimeOut);
 
 		/**
 		* \brief 将数据写入共享缓存，初始化为CT_READER时有效

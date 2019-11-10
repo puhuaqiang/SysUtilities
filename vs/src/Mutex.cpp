@@ -26,7 +26,7 @@ namespace SYS_UTL
 			{
 				return false;
 			}
-			m_hMutex = OpenEvent(MUTEX_ALL_ACCESS, TRUE, lpName);
+			m_hMutex = OpenMutex(MUTEX_ALL_ACCESS, TRUE, lpName);
 		}
 		else{
 			m_hMutex = CreateMutex(lpSec, bInitialOwner, lpName);

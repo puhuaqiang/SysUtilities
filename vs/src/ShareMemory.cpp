@@ -113,6 +113,9 @@ namespace SYS_UTL
 			lpDataHeader->dwReadOffset = 0;
 		}
 		//创建(或打开)数据写入通知
+		attr.bInheritHandle = FALSE;
+		attr.lpSecurityDescriptor = lpSec;
+		attr.nLength = sizeof(SECURITY_ATTRIBUTES);
 		if (!m_WriteEvent.Init(&attr, FALSE, FALSE, (const char*)lpProperty->szChangeEventName))
 		{
 			DBG_E;
@@ -120,6 +123,9 @@ namespace SYS_UTL
 			goto EXIT;
 		}
 		//创建(或打开)数据段访问互斥锁
+		attr.bInheritHandle = FALSE;
+		attr.lpSecurityDescriptor = lpSec;
+		attr.nLength = sizeof(SECURITY_ATTRIBUTES);
 		if (!m_Mutex.Init(&attr, FALSE, lpProperty->szMutexName))
 		{
 			DBG_E;
@@ -383,18 +389,17 @@ namespace SYS_UTL
 		UnInit();
 	}
 
-	int CFixShareMemory::Init(CommunicatorType nType, const char* lpszShareMemoryName, int iMaxPerPacketSize, int iMaxPacketCount)
+	int CFixShareMemory::Init(CommunicatorType nType, const char* lpszMutexName, const char* lpszShareMemoryName, int iMaxPerPacketSize, int iMaxPacketCount)
 	{
-		CAutoMutex lck(&m_Mutex);
 		SECURITY_ATTRIBUTES	attr;
 		PSECURITY_DESCRIPTOR lpSec = { NULL };
 		int	nErrCode = 0;
 		DWORD dwPacketSize = 0;
 
-		if (NULL == lpszShareMemoryName)
+		if ((NULL == lpszShareMemoryName) || (NULL == lpszMutexName))
 		{
 			DBG_E;
-			return 0;
+			return -1;
 		}
 
 		if (__IsInit())
@@ -431,6 +436,18 @@ namespace SYS_UTL
 			nErrCode = -6;
 			goto EXIT;
 		}
+
+		//创建(或打开)数据段访问互斥锁
+		attr.bInheritHandle = FALSE;
+		attr.lpSecurityDescriptor = lpSec;
+		attr.nLength = sizeof(SECURITY_ATTRIBUTES);
+		if (!m_Mutex.Init(&attr, FALSE, lpszMutexName))
+		{
+			DBG_E;
+			nErrCode = -9;
+			goto EXIT;
+		}
+
 		attr.bInheritHandle = FALSE;
 		attr.lpSecurityDescriptor = lpSec;
 		attr.nLength = sizeof(SECURITY_ATTRIBUTES);
@@ -489,7 +506,7 @@ namespace SYS_UTL
 		}
 	}
 
-	int CFixShareMemory::Write(int iPacketIndex, BYTE* pDataBuff, int iDataLen, DWORD dwTimeOut)
+	int CFixShareMemory::TryWrite(int iPacketIndex, BYTE* pDataBuff, int iDataLen, DWORD dwTimeOut)
 	{
 		if (iPacketIndex < 0 || iPacketIndex >= m_iMaxPacketCount)
 		{
@@ -576,7 +593,7 @@ namespace SYS_UTL
 
 	int CFixShareMemory::Write(int iPacketIndex, BYTE* pDataBuff, int iDataLen)
 	{
-		return Write(iPacketIndex, pDataBuff, iDataLen, INFINITE);
+		return TryWrite(iPacketIndex, pDataBuff, iDataLen, INFINITE);
 	}
 
 	int CFixShareMemory::Read(int iPacketIndex, BYTE* pDataBuff, int iBuffLen, int* pDataLen)

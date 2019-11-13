@@ -1,7 +1,8 @@
 #ifndef __SYS_UTILITIES_THREADBOX_H__
 #define __SYS_UTILITIES_THREADBOX_H__
 #include "CritSec.h"
-
+#include <queue>
+#include "AutoLock.h"
 namespace SYS_UTL
 {
 	typedef void(*BOX_THREAD_PROCESS)(BOOL& bRun, HANDLE hWait, void* pUserContext);
@@ -122,6 +123,56 @@ namespace SYS_UTL
 		/**线程标识*/
 		char m_szName[64];
 	};
+
+	class SYS_UTL_CPPAPI CTaskThread
+	{
+		CTaskThread(const CTaskThread &refAutoLock) = delete;
+		CTaskThread &operator=(const CTaskThread &refAutoLock) = delete;
+		CTaskThread(CTaskThread &&) = delete;
+		CTaskThread& operator= (CTaskThread &&) = delete;
+	public:
+		CTaskThread();
+		~CTaskThread();
+
+		template<typename Callable, typename ...Args>
+		void Task(Callable&& f, Args&&... args);
+
+		template<typename Callable, typename ...Args>
+		void Idle(Callable&& f, Args&&... args);
+
+	private:
+		std::queue<std::function<void()>> m_Tasks;
+		SYS_UTL::CCritSec m_lckTask;
+		SYS_UTL::CThreadBox m_TaskThread;
+
+		std::atomic<bool> m_TaskProcing;
+
+		std::queue<std::function<void()>> m_idleTasks;
+		SYS_UTL::CCritSec m_lckIdleTask;
+		SYS_UTL::CThreadBox m_IdleThread;
+	};
+
+	template<typename Callable, typename ...Args>
+	void CTaskThread::Task(Callable&& f, Args&&... args)
+	{
+		SYS_UTL::CAutoLock lck(&m_lckTask);
+		auto task = std::make_shared< std::packaged_task<void()> >(
+			std::bind(std::forward<Callable>(f), std::forward<Args>(args)...)
+			);
+		m_Tasks.emplace([task](){ (*task)(); });
+		m_TaskThread.SetEvent();
+	}
+
+	template<typename Callable, typename ...Args>
+	void CTaskThread::Idle(Callable&& f, Args&&... args)
+	{
+		SYS_UTL::CAutoLock lck(&m_lckIdleTask);
+		auto task = std::make_shared< std::packaged_task<void()> >(
+			std::bind(std::forward<Callable>(f), std::forward<Args>(args)...)
+			);
+		m_idleTasks.emplace([task](){ (*task)(); });
+		m_IdleThread.SetEvent();
+	}
 }
 
 #endif //__THREADBOX_H__

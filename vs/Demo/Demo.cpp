@@ -39,6 +39,36 @@ int _tmain(int argc, _TCHAR* argv[])
 	std::cin.ignore();
 	if (true)
 	{
+		SYS_UTL::CTaskThread _task;
+		std::thread tb2([&](){
+			for (int i = 0; i < 20; i++)
+			{
+				_task.Idle([](int v1, int v2){
+					std::cout << "idle " << v1 << "  " << v2 << std::endl;
+				}, i, i * 2);
+				Sleep(Random(10, 2000));
+			}
+		});
+		Sleep(Random(10, 300));
+		std::thread tb1([&](){
+			for (int i = 0; i < 20; i++)
+			{
+				_task.Task([](int v1, int v2){
+					std::cout << "task " << v1 << "  " << v2 << std::endl;
+				}, i, i*i);
+				Sleep(Random(10, 1000));
+				if (i > 10)
+				{
+					Sleep(1000);
+				}
+			}
+		});
+
+		std::cin.ignore();
+	}
+	std::cin.ignore();
+	if (true)
+	{
 		/***
 		* @brief 自动加锁/释放锁测试
 		* 延迟加锁测试

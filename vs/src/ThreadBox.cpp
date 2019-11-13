@@ -586,4 +586,106 @@ namespace SYS_UTL
 		return m_szName;
 	}
 
+	CTaskThread::CTaskThread()
+	{
+		m_TaskThread.Init(0, TRUE, TRUE);
+		m_TaskThread.Start([this](BOOL& bRun, HANDLE hWait, void* context){
+			std::queue<std::function<void()>> tasks_;
+			while (bRun)
+			{
+				WaitForSingleObject(hWait, 5000 /*INFINITE*/);
+				if (!bRun)
+				{
+					break;
+				}
+			{
+				CAutoLock lck(&m_lckTask);
+				if (!m_Tasks.empty())
+				{
+					do
+					{
+						tasks_.emplace(m_Tasks.front());
+						m_Tasks.pop();
+					} while (!m_Tasks.empty());
+				}
+			}
+
+			if (tasks_.empty())
+			{
+				continue;
+			}
+			m_TaskProcing.store(true);
+			do
+			{
+				if (tasks_.front())
+				{
+					tasks_.front()();
+				}
+				tasks_.pop();
+			} while (!tasks_.empty());
+			m_TaskProcing.store(false);
+			}
+		});
+
+		m_IdleThread.Init(0, TRUE, TRUE);
+		m_IdleThread.Start([this](BOOL& bRun, HANDLE hWait, void* context){
+			std::queue<std::function<void()>> tasks_;
+			while (bRun)
+			{
+				WaitForSingleObject(hWait, 5000);
+				if (!bRun)
+				{
+					break;
+				}
+
+			{
+				CAutoLock lck(&m_lckIdleTask);
+				if (!m_idleTasks.empty())
+				{
+					do
+					{
+						tasks_.emplace(m_idleTasks.front());
+						m_idleTasks.pop();
+					} while (!m_idleTasks.empty());
+				}
+			}
+
+			if (tasks_.empty())
+			{
+				continue;
+			}
+
+			if (m_TaskProcing.load())
+			{
+				continue;
+			}
+
+			do
+			{
+				if (tasks_.front())
+				{
+					tasks_.front()();
+				}
+				tasks_.pop();
+				if (m_TaskProcing.load())
+				{
+					break;
+				}
+			} while (!tasks_.empty());
+			}
+		});
+	}
+
+
+	CTaskThread::~CTaskThread()
+	{
+		m_IdleThread.Cancel();
+		m_IdleThread.Stop(1000);
+		m_IdleThread.UnInit();
+
+		m_TaskThread.Cancel();
+		m_TaskThread.Stop(1000);
+		m_TaskThread.UnInit();
+	}
+
 }

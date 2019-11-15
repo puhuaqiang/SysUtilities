@@ -57,6 +57,8 @@ SYS_UTL_CAPI struct sockaddr_in6 getLocalAddr(SOCKET sockfd);
 SYS_UTL_CAPI struct sockaddr_in6 getPeerAddr(SOCKET sockfd);
 SYS_UTL_CAPI bool isSelfConnect(SOCKET sockfd);
 
+SYS_UTL_CAPI int setReuseAddr(SOCKET sockfd, bool bReuse);
+
 }  // namespace sockets
 }  // namespace net
 }  // namespace 

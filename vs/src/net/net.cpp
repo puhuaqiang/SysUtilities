@@ -90,6 +90,10 @@ SOCKET OpenSocket(TRANS_PROTOCOL_TYPE nType, const char* host, unsigned short po
 		InetAddress addr1(host,port);
 		addr = addr1;
 	}
+	if ((nType == SYS_UTL::NET::TRANS_PROTOCOL_TYPE_TCP))
+	{
+		SYS_UTL::NET::SOCKETS::setReuseAddr(sockfd, true);
+	}
 
 	SYS_UTL::NET::SOCKETS::bindOrDie(sockfd, (const struct sockaddr*)addr.getSockAddr());
 

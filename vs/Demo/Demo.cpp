@@ -171,7 +171,6 @@ int _tmain(int argc, _TCHAR* argv[])
 		}
 		cNetServer.SetSktNoBlock();
 		cNetServer.SetTcpNoDelay();
-		cNetServer.SetSktReuseAddr(true);
 		SYS_UTL::NET::CNetClient* pNetClient = nullptr;
 
 		while (true)
@@ -255,7 +254,6 @@ int _tmain(int argc, _TCHAR* argv[])
 		}
 		cNetServer.SetSktNoBlock();
 		cNetServer.SetTcpNoDelay();
-		cNetServer.SetSktReuseAddr(true);
 		SYS_UTL::NET::CNetClient* pNetClient = nullptr;
 		std::thread clt([](){
 			Sleep(1000);
@@ -332,7 +330,6 @@ int _tmain(int argc, _TCHAR* argv[])
 			return -1;
 		}
 		cNetServer.SetSktNoBlock();
-		cNetServer.SetSktReuseAddr(true);
 		SYS_UTL::NET::CNetClient* pNetClient = nullptr;
 		std::thread clt([](){
 			Sleep(1000);

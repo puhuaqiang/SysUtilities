@@ -310,3 +310,11 @@ SYS_UTL_CAPI bool SOCKETS::isSelfConnect(SOCKET sockfd)
 	}
 }
 
+SYS_UTL_CAPI int SYS_UTL::NET::SOCKETS::setReuseAddr(SOCKET sockfd, bool bReuse)
+{
+	int err = 0, v = static_cast<int>(bReuse);
+	if ((err = setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, reinterpret_cast<char*>(&v), sizeof(v))) != 0){
+	}
+	return err;
+}
+

@@ -95,7 +95,7 @@ SOCKET OpenSocket(TRANS_PROTOCOL_TYPE nType, const char* host, unsigned short po
 		SYS_UTL::NET::SOCKETS::setReuseAddr(sockfd, true);
 	}
 
-	SYS_UTL::NET::SOCKETS::bindOrDie(sockfd, (const struct sockaddr*)addr.getSockAddr());
+	SYS_UTL::NET::SOCKETS::bindwrap(sockfd, (const struct sockaddr*)addr.getSockAddr());
 
 	if ((nType == SYS_UTL::NET::TRANS_PROTOCOL_TYPE_TCP))
 	{

@@ -310,6 +310,18 @@ SYS_UTL_CAPI bool SOCKETS::isSelfConnect(SOCKET sockfd)
 	}
 }
 
+SYS_UTL_CAPI int SYS_UTL::NET::SOCKETS::bindwrap(SOCKET sockfd, const struct sockaddr* addr)
+{
+	int ret = ::bind(sockfd, addr, static_cast<socklen_t>(sizeof(struct sockaddr_in6)));
+	if (ret < 0)
+	{
+		DBG_I("sockets::bindwrap");
+		DBG_E;
+		return -1;
+	}
+	return 0;
+}
+
 SYS_UTL_CAPI int SYS_UTL::NET::SOCKETS::setReuseAddr(SOCKET sockfd, bool bReuse)
 {
 	int err = 0, v = static_cast<int>(bReuse);

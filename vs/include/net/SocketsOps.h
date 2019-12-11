@@ -27,6 +27,7 @@ SYS_UTL_CAPI int createNonblockingOrDie(short family);
 
 SYS_UTL_CAPI int  connectwrap(SOCKET sockfd, const struct sockaddr* addr);
 SYS_UTL_CAPI void bindOrDie(SOCKET sockfd, const struct sockaddr* addr);
+SYS_UTL_CAPI int bindwrap(SOCKET sockfd, const struct sockaddr* addr);
 SYS_UTL_CAPI void listenOrDie(SOCKET sockfd);
 SYS_UTL_CAPI SOCKET acceptOrDie(SOCKET sockfd, struct sockaddr_in6* addr);
 SYS_UTL_CAPI int readwrap(SOCKET sockfd, void *buf, size_t count);
